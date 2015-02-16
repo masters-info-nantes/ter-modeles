@@ -1,0 +1,6 @@
+ digraph mon_graphe {
+	a -> b -> c;
+	b -> d;
+	a->d;
+	e->d;
+ }

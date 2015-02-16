@@ -7,7 +7,7 @@ import java.util.LinkedList;
 /** Class for represent {@code Node}.
  * 
  */
-public abstract class Node extends Element {
+public class Node extends Element {
 	private String name;
 	private ArrayList<Arc> arcs;
 	
@@ -47,7 +47,7 @@ public abstract class Node extends Element {
 	 * 
 	 * @return The list of arc whose start from this {@code Node}.
 	 */
-	public List<Arc> getArcs() {
+	public ArrayList<Arc> getArcs() {
 		return this.arcs;
 	}
 	
