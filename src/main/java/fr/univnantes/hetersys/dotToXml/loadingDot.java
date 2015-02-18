@@ -23,6 +23,11 @@ public class loadingDot
 		graph = new ArrayList<Node>();
 	}
 
+	public ArrayList<Node> getGraph()
+	{
+		return graph;
+	}
+
 	public void loadDot()
 	{
 		try
