@@ -1,9 +1,9 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[12pt,a4paper]{report}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-
+\usepackage{titlesec} 
 \usepackage{graphicx}
 \usepackage{microtype}
 \usepackage{hyperref} 
@@ -11,7 +11,8 @@
 
 \usepackage{pict2e}
 
-\usepackage{listings}	   
+\usepackage{listings}	  
+
 \lstdefinestyle{customstyle}{
     basicstyle=\footnotesize,
     breakatwhitespace=false,         
@@ -27,21 +28,41 @@
 \title{Projet de recherche}
 \author{Antoine Forgerou \and Jérémy Bardon \and Nicolas Bourdin}
 \date{}
-	
+\titleformat{\chapter}[hang]{\bf\huge}{\thechapter}{2pc}{} %Permet de masquer les affichages de "Chapitre" 
 \begin{document}
 	\renewcommand{\contentsname}{Sommaire}
 	\maketitle	
 
 	\tableofcontents	
+	\newpage
 	
 	\setlength{\unitlength}{1cm}
 
-\section{Présentation du laboratoire}
+\chapter{Présentation du laboratoire}
+Acteur central du développement de l'informatique dans la région des Pays de La Loire, le LINA (Laboratoire d'Informatique de Nantes Atlantique) est un laboratoire de recherche en sciences et technologies du logiciel dirigé par Pierre Cointe. %Avec ses 180 membres, celui ci couvre 
 
-\section{Présentation du sujet}
-\subsection{Problématiques}
+\section{Les différentes équipes}
+Le LINA est composé des équipes suivantes : 
+\begin{itemize}
+  \item AeLoS : \textbf{A}rchitecture et \textbf{Lo}giciel \textbf{S}ûrs
+  \item ASCOLA : \textbf{AS}pect and \textbf{CO}mposition \textbf{LA}nguages
+  \item AtlanMod : \textbf{Atlan}tic \textbf{Mod}eling 
+  \item COD : \textbf{CO}nnaissances et \textbf{D}écision
+  \item ComBi : \textbf{Com}binatoire et \textbf{Bi}oinformatique
+  \item DUKe : \textbf{D}ata \textbf{U}ser \textbf{K}nowledg\textbf{e}
+  \item GDD : \textbf{G}estion de \textbf{D}onnées \textbf{D}istribuées
+  \item GRIM : \textbf{G}estion, \textbf{R}ésumé, \textbf{I}nterrogation, et apprentissage sur les \textbf{M}asses de données
+  \item OPTI : Optimisation globale, optimisation multi-objectifs
+  \item TALN : \textbf{T}raitement \textbf{A}utomatique du \textbf{L}angage \textbf{N}aturel
+  \item TASC : Programmation par contraintes
+\end{itemize}
 
-\subsection{Solutions proposées par l'équipe AeLoS}
+\chapter{L'équipe AeLoS}	
+
+\chapter{Présentation du sujet}
+\section{Problématiques}
+
+\section{Solutions proposées par l'équipe AeLoS}
 Pour répondre à la problématique, l'équipe AeLoS nous a proposé 3 façons de 
 faire tout en nous laissant la liberté d'en proposer d'autres.
 \\\\
@@ -86,7 +107,7 @@ orientés vers la première solution. Nous avons donc entrepris de transformer
 n'importe quel modèle dans un language commun afin de permettre de les 
 interfacer.
 
-\section{PDF de présentation du projet}
+\chapter{PDF de présentation du projet}
 Contexte : Approches formelle des systèmes embarqués communiquants.
 La construction rigoureuse d'un logiciel se fait à partir de son modèle. Pour des logiciels complexes (par exemple ceux
 qui ont de nombreux composants différents -- hétérogènes-- et qui communiquent), on a affaire à plusieurs modèles
