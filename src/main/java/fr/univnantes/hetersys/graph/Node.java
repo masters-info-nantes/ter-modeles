@@ -1,6 +1,5 @@
 package fr.univnantes.hetersys.graph;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -68,7 +67,30 @@ public class Node extends Element {
 	}
 	
 	public String toString() {
-		return super.toString()+",name="+this.name+",arcs["+this.arcs.size()+"]";
+		return this.toString(0);
+	}
+	
+	public String toString(int depth){
+		StringBuilder str = new StringBuilder();
+		
+		for (int i = 0; i < depth; i++) {
+			str.append("\t");
+		}
+		
+		str.append(super.toString());
+		str.append(",name="+this.name);
+		str.append(",arcs["+this.arcs.size()+"]{\n");
+		
+		for (Arc arc :arcs) {
+			str.append(arc.getNext().toString(depth+1) + "\n");
+		}
+		
+		for (int i = 0; i < depth; i++) {
+			str.append("\t");
+		}		
+		str.append("}\n");
+		
+		return str.toString();		
 	}
 	
 	/** Finds a node in the graph starting by this {@code Node}.
@@ -78,17 +100,27 @@ public class Node extends Element {
 	 * @return a {@code Node} whose is equals to the {@code Node} in parameter if a {@code Node} correspond to it in graph starting by this {@code Node}; {@code null} otherwise.
 	 */
 	public Node findNode(Node toFind){
-		if(toFind == null)
+
+		if(toFind == null){
 			return null;
+		}
+		else if(this.equals(toFind)){
+			return this;
+		}
+
 		LinkedList<Node> backList = new LinkedList<Node>();
 		LinkedList<Node> queue = new LinkedList<Node>();
+		
 		queue.add(this);
 		Node cur = null, next = null;
+		
 		while(!queue.isEmpty()) {
 			cur = queue.remove();
 			backList.add(cur);
+			
 			for(Arc a : cur.getArcs()) {
 				next = a.getNext();
+				
 				if(next.equals(toFind)) {
 					return next;
 				}
@@ -107,6 +139,15 @@ public class Node extends Element {
 	 * @return a {@code Node} whose have the same id than {@code Node} in parameter if a {@code Node} correspond to it in graph starting by this {@code Node}; {@code null} otherwise.
 	 */
 	public Node findNode(int id) {
-		return findNode(new Node(id,""){});
+		return findNode(new Node(id,""));
+	}
+	
+	public boolean equals(Node n){		
+		if(this == n){
+			return true;
+		}
+		else {
+			return super.equals(n) || this.name.equals(n.name);
+		}
 	}
 }

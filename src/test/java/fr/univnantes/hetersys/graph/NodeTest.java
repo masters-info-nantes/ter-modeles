@@ -19,10 +19,10 @@ public class NodeTest {
 	public void setUp() throws Exception {
 		Node n0,n1,n2,n3,n4,n5;
 		
-		n0 = new Node("n0"){};
-		n1 = new Node("n1"){};
-		n2 = new Node("n2"){};
-		n3 = new Node("n3"){};
+		n0 = new Node("n0");
+		n1 = new Node("n1");
+		n2 = new Node("n2");
+		n3 = new Node("n3");
 		n0.addArc(new Arc("n0->n1",n1));
 		n1.addArc(new Arc("n0->n1",n2));
 		n2.addArc(new Arc("n0->n1",n3));
@@ -30,11 +30,11 @@ public class NodeTest {
 		graphLinearOneNode = n2;
 		
 		
-		n0 = new Node("n0"){};
-		n1 = new Node("n1"){};
-		n2 = new Node("n2"){};
-		n3 = new Node("n3"){};
-		n4 = new Node("n4"){};
+		n0 = new Node("n0");
+		n1 = new Node("n1");
+		n2 = new Node("n2");
+		n3 = new Node("n3");
+		n4 = new Node("n4");
 		n0.addArc(new Arc("n0->n1",n1));
 		n1.addArc(new Arc("n1->n2",n2));
 		n1.addArc(new Arc("n1->n3",n3));
@@ -43,12 +43,12 @@ public class NodeTest {
 		graphCondition = n0;
 		graphConditionOneNode = n2;
 		
-		n0 = new Node("n0"){};
-		n1 = new Node("n1"){};
-		n2 = new Node("n2"){};
-		n3 = new Node("n3"){};
-		n4 = new Node("n4"){};
-		n5 = new Node("n5"){};
+		n0 = new Node("n0");
+		n1 = new Node("n1");
+		n2 = new Node("n2");
+		n3 = new Node("n3");
+		n4 = new Node("n4");
+		n5 = new Node("n5");
 		n0.addArc(new Arc("n0->n1",n1));
 		n1.addArc(new Arc("n1->n2",n2));
 		n2.addArc(new Arc("n2->n3",n3));
@@ -74,7 +74,7 @@ public class NodeTest {
 	
 	@Test
 	public void testFindNodeIdNotExists() throws IOException{
-		Node n = graphLinear.findNode((new Node("not exist"){}).getId());
+		Node n = graphLinear.findNode((new Node("not exist")).getId());
 		assertNull(n);
 	}
 	
@@ -87,7 +87,7 @@ public class NodeTest {
 	
 	@Test
 	public void testFindNodeLinearNotExists() throws IOException{
-		Node n = graphLinear.findNode(new Node("not exist"){});
+		Node n = graphLinear.findNode(new Node("not exist"));
 		assertNull(n);
 	}
 	
@@ -100,7 +100,7 @@ public class NodeTest {
 	
 	@Test
 	public void testFindNodeConditionNotExists() throws IOException{
-		Node n = graphCondition.findNode(new Node("not exist"){});
+		Node n = graphCondition.findNode(new Node("not exist"));
 		assertNull(n);
 	}
 	
@@ -113,7 +113,7 @@ public class NodeTest {
 	
 	@Test
 	public void testFindNodeCycleNotExists() throws IOException{
-		Node n = graphCycle.findNode(new Node("not exist"){});
+		Node n = graphCycle.findNode(new Node("not exist"));
 		assertNull(n);
 	}
 }

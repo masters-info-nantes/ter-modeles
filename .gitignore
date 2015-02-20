@@ -5,3 +5,7 @@
 *.synctex.gz
 *.class
 target
+.classpath
+.project
+.settings/
+test.xml

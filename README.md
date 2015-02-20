@@ -8,9 +8,18 @@ Le but du projet et de pouvoir importer des automates au format [DOT](http://fr.
 
 ##Utilisation
 Compiler, tester et executer avec maven
+
+* Avec eclipse
+
+```
+$ mvn eclipse:eclipse
+```
+
+* Dans un shell
+
 ```
 $ mvn compile
-$ mvn test
+$ mvn test # Optionel: pour lancer les tests
 $ mvn exec:java
 
 Avoid maven messages: 
