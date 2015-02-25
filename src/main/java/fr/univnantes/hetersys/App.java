@@ -15,7 +15,9 @@ public class App {
 
 		System.out.println(importer.getGraph());
 		
-		Exporter exporter = new XmlExporter("test");
-		exporter.generateProject(new File("test.xml"), importer.getGraph());	
+		Exporter exporter = new XmlExporter("test", "jobbers.xml");
+		//exporter.generateProject(new File("test.xml"), importer.getGraph());	
+
+		exporter.insertTemplate("jobbers.xml", importer.getGraph());
 	}	
 }

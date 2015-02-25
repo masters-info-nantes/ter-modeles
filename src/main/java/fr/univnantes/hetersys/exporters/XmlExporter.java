@@ -1,6 +1,7 @@
 package fr.univnantes.hetersys.exporters;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import fr.univnantes.hetersys.graph.Arc;
 import fr.univnantes.hetersys.graph.Node;
@@ -28,14 +30,19 @@ public class XmlExporter implements Exporter
 	private Document document;
 	private Element currentElement;
 	private String automataName;
+	private Node graph;
+	private String name;
 
-	public XmlExporter(String automataName)
+	public XmlExporter(String automataName, String name)
 	{  
 		this.automataName = automataName;
+		this.name = name;
         this.createFileStructure();
 	}
 
 	private void createFileStructure(){
+		File fXmlFile = new File(this.name);
+		
 		DocumentBuilder docBuilder = null;
 		try {
 			docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -44,9 +51,16 @@ public class XmlExporter implements Exporter
 			System.err.println("Cannot create XML document");
 		}
 		
-        this.document = docBuilder.newDocument();
-        this.currentElement = document.createElement("nta");
-        this.document.appendChild(this.currentElement);		
+		try {
+			this.document = docBuilder.parse(fXmlFile);
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	private void generateNodes(Element parentElt, Node node, List<Node> visitedNodes, int compteur)
@@ -98,7 +112,7 @@ public class XmlExporter implements Exporter
 		parentElt.appendChild(decl);
 	}
 
-	private void generateTemplate(Element parentElt, Node graph)
+	private Element generateTemplate(Element parentElt, Node graph)
 	{
 		Element tpl  = this.document.createElement("template"),
 				name = this.document.createElement("name");
@@ -107,16 +121,19 @@ public class XmlExporter implements Exporter
 		name.setAttribute("x", "0");
 		name.appendChild(this.document.createTextNode(this.automataName));
 
-		this.currentElement.appendChild(tpl);
+		//this.currentElement.appendChild(tpl);
 		
 		this.generateDeclaration(tpl);
 		this.generateNodes(tpl, graph, new ArrayList<Node>(), 0);
 		this.generateTransitions(tpl, graph);
+
+		return tpl;
 	}
 
 	@Override
 	public void generateProject(File file, Node graph)
 	{
+		this.graph = graph;
 		this.generateDeclaration(this.currentElement);
 		this.generateTemplate(this.currentElement, graph);
 		this.writeInFile(file);
@@ -139,5 +156,29 @@ public class XmlExporter implements Exporter
 		catch (TransformerFactoryConfigurationError | TransformerException e) {
 			System.err.println("Cannot write generated XML to " + file.getAbsolutePath());
 		} 
+	}
+
+	public void insertTemplate(String name, Node graph){
+
+		
+		this.graph = graph;
+		//optional, but recommended
+		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+		this.document.getDocumentElement().normalize();
+	 
+		System.out.println("Root element :" + this.document.getDocumentElement().getNodeName());
+		Element root = this.document.getDocumentElement();
+		Element elt = generateTemplate(root, this.graph);
+		Element system = null;
+		for (int i = 0; i < root.getChildNodes().getLength(); i++) {
+			org.w3c.dom.Node n = root.getChildNodes().item(i);
+			if(n.getNodeName().equals("system")){
+				system = (Element) n;
+			}
+		}
+		
+		System.out.println(system.getNodeName());
+		root.insertBefore(elt, system);
+		writeInFile(new File(name));
 	}
 }
