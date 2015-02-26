@@ -20,47 +20,35 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import fr.univnantes.hetersys.graph.Arc;
 import fr.univnantes.hetersys.graph.Node;
 
-public class XmlExporter implements Exporter
+public class UppaalExporter implements Exporter
 {
 	private Document document;
 	private Element currentElement;
 	private String automataName;
 	private Node graph;
-	private String name;
+	private File uppaalProject;
 
-	public XmlExporter(String automataName, String name)
+	public UppaalExporter(String automataName, File uppaalProject)
 	{  
 		this.automataName = automataName;
-		this.name = name;
+		this.uppaalProject = uppaalProject;
         this.createFileStructure();
 	}
 
 	private void createFileStructure(){
-		File fXmlFile = new File(this.name);
-		
-		DocumentBuilder docBuilder = null;
 		try {
-			docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			this.document = docBuilder.parse(this.uppaalProject);			
 		} 
-		catch (ParserConfigurationException e) {
+		catch (ParserConfigurationException | SAXException | IOException e) {
 			System.err.println("Cannot create XML document");
 		}
-		
-		try {
-			this.document = docBuilder.parse(fXmlFile);
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
 	
 	private void generateNodes(Element parentElt, Node node, List<Node> visitedNodes, int compteur)
@@ -82,14 +70,14 @@ public class XmlExporter implements Exporter
 		nodeElt.appendChild(nameElt);
 		parentElt.appendChild(nodeElt);
 
-		for(Arc arc: node.getArcs()){
+		for(Arc arc: node.getOutputArcs()){
 			this.generateNodes(parentElt, arc.getNext(), visitedNodes, compteur + 70);
 		}
 	}
 
 	private void generateTransitions(Element parentElt, Node node)
 	{
-		for(Arc arc: node.getArcs()){
+		for(Arc arc: node.getOutputArcs()){
 			Element arcElt = this.document.createElement("transition");
 			
 			Element sourceElt = this.document.createElement("source");
@@ -121,7 +109,7 @@ public class XmlExporter implements Exporter
 		name.setAttribute("x", "0");
 		name.appendChild(this.document.createTextNode(this.automataName));
 
-		//this.currentElement.appendChild(tpl);
+		tpl.appendChild(name);
 		
 		this.generateDeclaration(tpl);
 		this.generateNodes(tpl, graph, new ArrayList<Node>(), 0);
@@ -131,15 +119,36 @@ public class XmlExporter implements Exporter
 	}
 
 	@Override
-	public void generateProject(File file, Node graph)
-	{
+	public void generateProject(Node graph) throws IOException
+	{		
 		this.graph = graph;
-		this.generateDeclaration(this.currentElement);
-		this.generateTemplate(this.currentElement, graph);
-		this.writeInFile(file);
+		//this.document.getDocumentElement().normalize();
+
+		// Load xml structure
+		Element root = this.document.getDocumentElement();
+		Element template = generateTemplate(root, this.graph);
+		
+		// Search system element to insert the template before
+		Element system = null;
+		NodeList rootChildren = root.getChildNodes(); 
+		
+		for (int i = 0; i < rootChildren.getLength(); i++){
+			org.w3c.dom.Node n = rootChildren.item(i);
+			if(n.getNodeName().equals("system")){
+				system = (Element) n;
+			}
+		}
+
+		if(system == null){
+			throw new IOException("Cannot find <system> element in " + this.uppaalProject.getName());
+		}
+		root.insertBefore(template, system);
+	
+		// Save changes to uppaal project file
+		this.writeInFile();
 	}
 	
-	private void writeInFile(File file){
+	private void writeInFile(){
 
         Transformer transformer;
 		try {
@@ -149,36 +158,12 @@ public class XmlExporter implements Exporter
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");            
 
             Source src = new DOMSource(this.document);
-            Result result = new StreamResult(file);
+            Result result = new StreamResult(this.uppaalProject);
             transformer.transform(src, result);
             
 		}
 		catch (TransformerFactoryConfigurationError | TransformerException e) {
-			System.err.println("Cannot write generated XML to " + file.getAbsolutePath());
+			System.err.println("Cannot write generated XML to " + this.uppaalProject.getAbsolutePath());
 		} 
-	}
-
-	public void insertTemplate(String name, Node graph){
-
-		
-		this.graph = graph;
-		//optional, but recommended
-		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-		this.document.getDocumentElement().normalize();
-	 
-		System.out.println("Root element :" + this.document.getDocumentElement().getNodeName());
-		Element root = this.document.getDocumentElement();
-		Element elt = generateTemplate(root, this.graph);
-		Element system = null;
-		for (int i = 0; i < root.getChildNodes().getLength(); i++) {
-			org.w3c.dom.Node n = root.getChildNodes().item(i);
-			if(n.getNodeName().equals("system")){
-				system = (Element) n;
-			}
-		}
-		
-		System.out.println(system.getNodeName());
-		root.insertBefore(elt, system);
-		writeInFile(new File(name));
 	}
 }

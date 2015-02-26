@@ -14,7 +14,7 @@ public class NodeTest {
 	Node graphConditionOneNode = null;
 	Node graphCycle = null;
 	Node graphCycleOneNode = null;
-	
+/*	
 	@Before
 	public void setUp() throws Exception {
 		Node n0,n1,n2,n3,n4,n5;
@@ -58,6 +58,7 @@ public class NodeTest {
 		graphCycle = n0;
 		graphCycleOneNode = n5;
 	}
+*/
 	
 	@Test
 	public void testFindNodeWithNull() throws IOException{

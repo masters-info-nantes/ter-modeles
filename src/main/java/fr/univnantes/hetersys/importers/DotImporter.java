@@ -86,8 +86,11 @@ public class DotImporter extends Importer
 				endNode = new Node(nodeTab[i+1]);
 			}						
 			
-			Arc arc = new Arc(this.nameArc, endNode);
-			startNode.addArc(arc);
+			Arc inArc = new Arc(this.nameArc, endNode);
+			startNode.addOutputArc(inArc);
+			
+			Arc outArc = new Arc(this.nameArc, startNode);
+			endNode.addInputArc(outArc);
 		}
 	}
 }
