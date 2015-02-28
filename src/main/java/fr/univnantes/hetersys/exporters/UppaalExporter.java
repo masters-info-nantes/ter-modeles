@@ -84,10 +84,18 @@ public class UppaalExporter implements Exporter
 			sourceElt.setAttribute("ref", String.valueOf(node.getName()));
 			
 			Element targetElt = this.document.createElement("target");
-			targetElt.setAttribute("ref", String.valueOf(arc.getNext().getName()));			
+			targetElt.setAttribute("ref", String.valueOf(arc.getNext().getName()));	
+
+			Element labelElt = this.document.createElement("label");
+			labelElt.setAttribute("kind", "synchronisation");
+			if(!("(pas de nom)".equals(arc.getName())))
+			{
+				labelElt.appendChild(this.document.createTextNode(arc.getName()));	
+			}						
 			
 			arcElt.appendChild(sourceElt);
 			arcElt.appendChild(targetElt);
+			arcElt.appendChild(labelElt);
 			parentElt.appendChild(arcElt);
 			
 			this.generateTransitions(parentElt, arc.getNext());

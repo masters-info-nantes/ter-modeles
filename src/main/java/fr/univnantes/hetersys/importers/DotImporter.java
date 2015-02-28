@@ -81,18 +81,56 @@ public class DotImporter extends Importer
 				startNode = new Node(nodeTab[i]);
 			}
 			
-			Node endNode = this.graph.findNode(new Node(nodeTab[i+1]));
-			if(endNode == null){
-				endNode = new Node(nodeTab[i+1]);
-			}						
+			String[] tabLabel = loadLabel(nodeTab[i+1]);
 			
-			Arc inArc = new Arc(this.nameArc, endNode);
+			Node endNode;
+			Arc inArc;
+			if(tabLabel == null)
+			{
+				endNode = this.graph.findNode(new Node(nodeTab[i+1]));
+				
+				if(endNode == null){
+					endNode = new Node(nodeTab[i+1]);
+				}
+
+				inArc = new Arc(this.nameArc, endNode);
+			}
+			else
+			{
+				endNode = this.graph.findNode(new Node(tabLabel[0]));
+				
+				if(endNode == null){
+					endNode = new Node(tabLabel[0]);
+				}
+				
+				inArc = new Arc(tabLabel[1], endNode);
+			}							
+		
+			//Arc inArc = new Arc(this.nameArc, endNode);
 			startNode.addOutputArc(inArc);
 			
 			Arc outArc = new Arc(this.nameArc, startNode);
 			endNode.addInputArc(outArc);
 		}
 	}
+
+	/* Si il ya un label -> retourne le nomd du noeud en case 0 et le nom de la transition en case 1*/
+	private String[] loadLabel(String att)
+	{
+		System.out.println("start loadLabel : "+att);
+		if(att.length()>1)
+		{
+			String[] tab = att.split("\\[");
+
+			if(tab.length == 2)
+			{
+				String label = tab[1].replaceAll("]","");
+				tab[1] = label.split("=")[1];
+				return tab;
+			}
+		}	
+		return null;
+	}	
 }
 
 
