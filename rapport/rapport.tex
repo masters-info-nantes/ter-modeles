@@ -8,6 +8,7 @@
 \usepackage{microtype}
 \usepackage{hyperref} 
 \usepackage[frenchb]{babel}
+\usepackage{listings}
 
 \usepackage{pict2e}
 
@@ -107,6 +108,59 @@ orientés vers la première solution. Nous avons donc entrepris de transformer
 n'importe quel modèle dans un language commun afin de permettre de les 
 interfacer.
 
+\newpage
+\section{UPPAAL : un outil de modelisation des automates}
+UPPAAL est un environnement intégré d'outils pour la modélisation , la validation et la vérification des systèmes temps réel modélisés comme des réseaux d' automates.
+Uppaal se compose de trois parties principales: 
+\begin{itemize}
+  \item{ un langage de description}
+  \item{ un simulateur}
+  \item{ un vérificateur de modèle}
+\end{itemize} 
+
+  Le langage de description est un langage de commande non-déterministe avec des types de données (par exemple des entiers , des tableaux, etc. ) . Il ce sert de la modélisation ou du langage de conception pour décrire le comportement du système grâce à des réseaux d'automates étendus avec des variables d' horloge et des données .\\ 
+
+  Le simulateur est un outil de validation qui permet l'examen de possibles exécutions d'un système au début de la conception( ou la modélisation ) et fournit un moyen peu coûteux de détection de défaut avant la vérification par le vérificateur de modèle qui couvre l'ensemble des comportement dynamique du système.\\
+
+  Le modèle orthographique peut vérifier les propriétés invariantes et l'accessibilité en explorant l'espace et l'état d'un système, c'est à dire l'analyse de l'accessibilité en termes d'états symboliques représentés par des contraintes .
+
+\section{Le format DOT}
+
+  Le langage DOT est un langage de description de graphe dans un format texte. C'est une manière simple de décrire des graphiques que les humains et les programmes informatiques peuvent utiliser. Les graphes DOT sont généralement des fichiers avec pour extension un .gv (ou .dot ).\\
+
+  La syntaxe DOT peut aussi bien décrire des graphes non-orientés que des graphes orientés, comme des automates finis.
+  Il est possible de placer des labels sur les transistions pour par exemple leurs donner un nom ou une explication. Le language possède aussi des attributs permettant une description graphique plus poussée, par exemple choisir la couleur d'un noeud ou de dessiner une transition en pointillé.
+
+\subsection{Graphe non-orienté}
+
+\begin{lstlisting}
+graph monGraphe {
+    a -- b -- c;
+    b -- d;
+}
+\end{lstlisting}
+
+  \textit{Resultat : }
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.3]{ressources/grapheNO.png}
+\end{figure}
+
+\subsection{Graphe orienté}
+
+\begin{lstlisting}
+graph monGraphe {
+    a -> b -> c;
+    b -> d;
+}
+\end{lstlisting}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.3]{ressources/grapheO.png}
+\end{figure}
+
 \chapter{PDF de présentation du projet}
 Contexte : Approches formelle des systèmes embarqués communiquants.
 La construction rigoureuse d'un logiciel se fait à partir de son modèle. Pour des logiciels complexes (par exemple ceux
@@ -124,5 +178,7 @@ modèle choisi mais qui est sémantiquement équivalent.
 des contrats (de type Assume/Guarantee)
 - Plug'N'Check (analyse systématique de modèles/composants)
 - etc
+
+
 
 \end{document}
