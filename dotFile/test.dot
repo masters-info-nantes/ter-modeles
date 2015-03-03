@@ -1,7 +1,7 @@
  digraph mon_graphe {
-	a -> b -> c;
-	b -> d[label=toto];
-	a->d[label=tata];
+	a[label=sas] -> b[label=zz] -> c[label=zazz];
+	b -> d;
+	a->d[label=rrz];
 	e->d;
 	d-> j;
  }

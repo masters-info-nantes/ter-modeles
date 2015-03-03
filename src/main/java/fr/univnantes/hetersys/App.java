@@ -2,6 +2,7 @@ package fr.univnantes.hetersys;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 
 import fr.univnantes.hetersys.exporters.Exporter;
 import fr.univnantes.hetersys.exporters.UppaalExporter;
@@ -15,7 +16,11 @@ public class App {
 		System.out.println("> Import dot file");
 		
 		Importer importer = new DotImporter();
-		importer.load(new File("dotFile/test.dot"));
+		try {
+			importer.load(new File("dotFile/test.dot"));
+		} catch (ParseException e) {
+			System.err.println(e.getMessage());
+		}
 		
 		System.out.println("> Export in uppaal project");		
 		File uppaalFile = new File("jobbers.xml");
@@ -27,9 +32,11 @@ public class App {
 			System.err.println(e.getMessage());
 		}
 		
+		/*
 		System.out.println("> Test: graph entry points");
 		for (Node node : importer.getGraph().getEntryPoints()) {
 			System.out.println(node.getName());
-		}		
+		}
+		*/		
 	}	
 }

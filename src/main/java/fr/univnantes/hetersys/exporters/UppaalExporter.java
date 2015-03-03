@@ -29,7 +29,6 @@ import fr.univnantes.hetersys.graph.Node;
 public class UppaalExporter implements Exporter
 {
 	private Document document;
-	private Element currentElement;
 	private String automataName;
 	private Node graph;
 	private File uppaalProject;
@@ -86,16 +85,18 @@ public class UppaalExporter implements Exporter
 			Element targetElt = this.document.createElement("target");
 			targetElt.setAttribute("ref", String.valueOf(arc.getNext().getName()));	
 
-			Element labelElt = this.document.createElement("label");
-			labelElt.setAttribute("kind", "synchronisation");
-			if(!("(pas de nom)".equals(arc.getName())))
+			arcElt.appendChild(sourceElt);
+			arcElt.appendChild(targetElt);			
+			
+			if(!("".equals(arc.getName())))
 			{
-				labelElt.appendChild(this.document.createTextNode(arc.getName()));	
+				Element labelElt = this.document.createElement("label");
+				labelElt.setAttribute("kind", "synchronisation");				
+				labelElt.appendChild(this.document.createTextNode(arc.getName()));
+				
+				arcElt.appendChild(labelElt);				
 			}						
 			
-			arcElt.appendChild(sourceElt);
-			arcElt.appendChild(targetElt);
-			arcElt.appendChild(labelElt);
 			parentElt.appendChild(arcElt);
 			
 			this.generateTransitions(parentElt, arc.getNext());
