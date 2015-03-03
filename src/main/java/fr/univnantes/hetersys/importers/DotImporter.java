@@ -122,7 +122,7 @@ public class DotImporter extends Importer
 	private String[] parseDotNode(String node) throws ParseException
 	{		
 		// ?: = not capture the group
-		Pattern pattern = Pattern.compile("(\\w*)(?:\\[label=(\\w*)\\])?");
+		Pattern pattern = Pattern.compile("(\\w+)(?:\\[label=(\\w*)\\])?");
 		Matcher matcher = pattern.matcher(node);
 		
 		if(!matcher.find()){
