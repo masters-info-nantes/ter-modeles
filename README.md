@@ -29,6 +29,7 @@ $ mvn exec:java | grep -Ev "(\[INFO\])|(\[WARNING\])"
 ##Liens
 * Projet sur [CIEforge](https://cieforge.univ-nantes.fr/projects/hetersys/) qui contient le forum et des documents de référence.
 * [Diagramme de Gantt](https://drive.google.com/open?id=0B-uNQeLFVbHVdDFldXFaVDJ0T28&authuser=0) hébergé sur google drive
+* [TODO list](https://github.com/masters-info-nantes/ter-modeles/blob/master/TODO.md)
 
 ##Infos
 **La structure de graphe est tirée du projet [control-flow-graph](https://github.com/masters-info-nantes/control-flow-graph) auquel un d'entre nous a participé. Elle a subi quelques modifications pour s'adapter à notre projet**
