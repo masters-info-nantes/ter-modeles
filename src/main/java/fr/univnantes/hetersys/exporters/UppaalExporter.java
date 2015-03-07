@@ -69,14 +69,20 @@ public class UppaalExporter implements Exporter
 		nodeElt.appendChild(nameElt);
 		parentElt.appendChild(nodeElt);
 
-		for(Arc arc: node.getOutputArcs()){
+		
+		List<Arc> allArcs = new ArrayList<Arc>();
+		allArcs.addAll(node.getOutputArcs());			
+		allArcs.addAll(node.getInputArcs());
+		
+		for(Arc arc: allArcs){
 			this.generateNodes(parentElt, arc.getNext(), visitedNodes, compteur + 70);
 		}
 	}
 
-	private void generateTransitions(Element parentElt, Node node)
-	{
+	private void generateTransitions(Element parentElt, Node node, List<Node> visitedNodes)
+	{		
 		for(Arc arc: node.getOutputArcs()){
+			
 			Element arcElt = this.document.createElement("transition");
 			
 			Element sourceElt = this.document.createElement("source");
@@ -98,8 +104,18 @@ public class UppaalExporter implements Exporter
 			}						
 			
 			parentElt.appendChild(arcElt);
-			
-			this.generateTransitions(parentElt, arc.getNext());
+
+			visitedNodes.add(node);
+
+			if(!visitedNodes.contains(arc.getNext())){
+				this.generateTransitions(parentElt, arc.getNext(), visitedNodes);
+			}
+		}
+		
+		for (Arc arc : node.getInputArcs()) {
+			if(!visitedNodes.contains(arc.getNext())){
+				this.generateTransitions(parentElt, arc.getNext(), visitedNodes);
+			}			
 		}
 	}
 
@@ -122,7 +138,8 @@ public class UppaalExporter implements Exporter
 		
 		this.generateDeclaration(tpl);
 		this.generateNodes(tpl, graph, new ArrayList<Node>(), 0);
-		this.generateTransitions(tpl, graph);
+		
+		this.generateTransitions(tpl, this.graph, new ArrayList<Node>());
 
 		return tpl;
 	}
@@ -131,7 +148,6 @@ public class UppaalExporter implements Exporter
 	public void generateProject(Node graph) throws IOException
 	{		
 		this.graph = graph;
-		//this.document.getDocumentElement().normalize();
 
 		// Load xml structure
 		Element root = this.document.getDocumentElement();
