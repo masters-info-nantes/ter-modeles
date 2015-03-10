@@ -23,20 +23,16 @@ public class App {
 		}
 		
 		System.out.println("> Export in uppaal project");		
+		
 		File uppaalFile = new File("jobbers.xml");
-		Exporter exporter = new UppaalExporter("test", uppaalFile);
+		Exporter exporter = new UppaalExporter("test");
+		exporter.loadExistingFile(uppaalFile);
+		
 		try {
-			exporter.generateProject(importer.getGraph());
+			exporter.updateFile(importer.getGraph());
 		} 
 		catch (IOException e) {
 			System.err.println(e.getMessage());
-		}
-		
-		/*
-		System.out.println("> Test: graph entry points");
-		for (Node node : importer.getGraph().getEntryPoints()) {
-			System.out.println(node.getName());
-		}
-		*/		
+		}	
 	}	
 }

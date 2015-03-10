@@ -1,7 +1,7 @@
  digraph mon_graphe {
-	a[label=sas] -> b[label=zz] -> c[label=zazz];
+	a -> b -> c[label=vendredi?13];
 	b -> d;
-	a->d[label=rrz];
+	a->d[label=superman];
 	e->d;
 	d-> j;
  }

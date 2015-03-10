@@ -122,13 +122,13 @@ public class DotImporter extends Importer
 	private String[] parseDotNode(String node) throws ParseException
 	{		
 		// ?: = not capture the group
-		Pattern pattern = Pattern.compile("(\\w+)(?:\\[label=(\\w*)\\])?");
+		Pattern pattern = Pattern.compile("(\\w+)(?:\\[label=([^\\[]+)\\])?");
 		Matcher matcher = pattern.matcher(node);
 		
-		if(!matcher.find()){
+		if(!matcher.matches()){
 			throw new ParseException("Dot element not recognized: " + node, this.currentLine);
 		}
-		
+
 		List<String> parsedNode = new ArrayList<String>();
 		parsedNode.add(matcher.group(1));
 		
@@ -138,7 +138,22 @@ public class DotImporter extends Importer
 		}
 		
 		return (String[]) parsedNode.toArray(new String[parsedNode.size()]);
-	}	
+	}
+	
+	/**
+	 * Parse a dot label (on transitions)
+	 * @param label Label to parse in string format
+	 * @return One string if the label does not contains a channel, 
+	 * otherwise two strings (channel and expression)
+	 */
+	public static String[] parseDotLabel(String label){
+		// Pattern: <channel id><operator ? or !><expression>
+		
+		// If the expression contains "?" or "!" it will be not splitted
+		String[] parts = label.split("\\?|!", 2);
+		
+		return parts;
+	}
 }
 
 
