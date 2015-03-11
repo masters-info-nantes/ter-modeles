@@ -36,10 +36,7 @@ public class UppaalExporter implements Exporter
 	private File uppaalProject;
 	private Set<String> channels;
 	private List<String> templateName;
-	private Element templateBis = null;
-	private Element template = null;
-	private Element currentTemplate = null;
-	
+
 	/**
 	 * Set to true if at least one channel from the graph
 	 * is in the Uppaal project
@@ -50,20 +47,25 @@ public class UppaalExporter implements Exporter
 	private boolean channelsInAutomata;
 	private String automataName;
 	private Node graph;
+
 	public UppaalExporter(String automataName)
 	{
 		this.automataName = automataName;
 		this.channels = new HashSet<String>();
+
 		this.channelLink = false;
 		this.channelsInAutomata = false;
+
 		this.uppaalProject = null;
 		this.graph = null;
 		this.document = null;
 		this.templateName = new ArrayList<String>();
 	}
+
 	@Override
 	public void loadExistingFile(File file) {
 		this.uppaalProject = file;
+
 		// Load project structure
 		try {
 			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -72,108 +74,102 @@ public class UppaalExporter implements Exporter
 		catch (ParserConfigurationException | SAXException | IOException e) {
 			System.err.println("Cannot create XML document");
 		}
+
 		// Load channels
 		this.loadChannels();
 	}
+
 	@Override
 	public void updateFile(Node graph) throws IOException
 	{
-		boolean exist = false;
 		// Checks before export
 		if(this.uppaalProject == null){
 			throw new IOException("Uppaal project not yet loaded, please call loadExistingProject method.");
 		}
+
 		this.graph = graph;
 		this.checkChannelsExistence(graph, new ArrayList<Node>());
+
 		if(this.channelsInAutomata && !this.channelLink){
+
 			Scanner userInput = new Scanner(System.in);
 			System.out.println(
 					"No channels from the graph is in the Uppaal project. You will not be able to put\n" +
 							"your automata and those of the project together. Export anyway ? (yes/default no)"
 					);
+
 			String result = userInput.nextLine();
 			//userInput.close(); // Don't close
+
 			if(!"yes".equals(result)){
 				System.out.println("> Export has been canceled by user.");
 				return;
 			}
 		}
+
 		// Load xml structure
 		Element root = this.document.getDocumentElement();
-		template = generateTemplate(root, this.graph);
+		Element template = generateTemplate(this.graph);
+
 		// Search system element to insert the template before
-		Element system = null;
+		Element system = null, existingTemplate = null;
 		NodeList rootChildren = root.getChildNodes();
-		for (int i = 0; i < rootChildren.getLength(); i++){
+
+		for (int i = 0; i < rootChildren.getLength(); i++){			
 			org.w3c.dom.Node n = rootChildren.item(i);
+
 			if(n.getNodeName().equals("system")){
 				system = (Element) n;
 			}
-			if(n.getNodeName().equals("template")){
-				templateBis = (Element) n;
+			else if(n.getNodeName().equals("template")){
+				Element currentTemplate = (Element) n;
 
-
-				NodeList templateChildren = templateBis.getElementsByTagName("name");
+				NodeList templateChildren = currentTemplate.getElementsByTagName("name");
 				for(int j = 0; j < templateChildren.getLength(); j++){
 
 					Element current = (Element) templateChildren.item(j);
 					if(current.getParentNode().getNodeName().equals("template")){
 
+						// The template allready exists and has been found
 						System.out.println(current.getTextContent());
 						if(current.getTextContent().equals(this.automataName)){
-							currentTemplate = current;
-							//System.out.println(current.getTextContent());
-							exist = true;
-							System.out.println("\tCan't add the new template : Already Exist\n");
+
+							existingTemplate = currentTemplate;
+
+							System.out.println("Can't add the new template : Already Exist\n");
+							System.out.println("Template " + this.automataName +" already exists, replace it? (yes/no)");
+							Scanner sc = new Scanner(System.in);
+
+							String ans = sc.nextLine();
+
+							if("yes".equals(ans)){
+								root.replaceChild(template, existingTemplate);								
+							}							
+							break;
 						}
 					}
 				}
-
 			}
 		}
 
-
-
+		// Check project format
 		if(system == null){
 			throw new IOException("Cannot find <system> element in " + this.uppaalProject.getName());
 		}
 
-		
-		
-		if(exist == false){
-
-			System.out.println("\tTemplate "+ this.automataName + " inserted with succes!\n");
+		if(existingTemplate == null){
+			System.out.println("\tTemplate "+ this.automataName + " inserted with success!\n");
 			root.insertBefore(template, system);
-			// Save changes to uppaal project file
-			this.writeInFile();
-			System.out.println(
-					"> The uppaal project \"" + this.uppaalProject.getName() +
-					"\" has been updated with \"" + this.automataName + "\" automata"
-					);
-
-		}else
-		{
-			System.out.println("Template " + this.automataName +" already exists, replace it? (yes/no)");
-			Scanner sc = new Scanner(System.in);
-
-			String ans = sc.nextLine();
-
-			if("yes".equals(ans)){
-				//System.out.println(templateBis.getTextContent());
-				//n2 pas bon
-				org.w3c.dom.Node node = (org.w3c.dom.Node) template;
-				root.replaceChild(templateBis, node);
-				
-			}else
-			{
-				System.out.println("toto");
-			}
 		}
-
-
-
-
+		
+		// Save changes to uppaal project file
+		this.writeInFile();
+		System.out.println(
+				"> The uppaal project \"" + this.uppaalProject.getName() +
+				"\" has been updated with \"" + this.automataName + "\" automata"
+		);		
 	}
+
 	/*-------------------------------------- Internal logic ---------------------------------------*/	
 	private void checkChannelsExistence(Node node, List<Node> visitedNodes){
 		for(Arc arc: node.getOutputArcs()){
@@ -291,7 +287,7 @@ public class UppaalExporter implements Exporter
 		Element decl = this.document.createElement("declaration");
 		parentElt.appendChild(decl);
 	}
-	private Element generateTemplate(Element parentElt, Node graph)
+	private Element generateTemplate(Node graph)
 	{
 		Element tpl = this.document.createElement("template"),
 				name = this.document.createElement("name");
