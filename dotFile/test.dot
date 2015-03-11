@@ -1,5 +1,5 @@
  digraph mon_graphe {
-	a -> b -> c[label=vendredi13];
+	a -> b -> c[label=vendredi?13];
 	b -> d;
 	a->d[label=superman];
 	e->d;

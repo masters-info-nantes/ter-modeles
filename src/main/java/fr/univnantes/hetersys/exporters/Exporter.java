@@ -7,5 +7,5 @@ import fr.univnantes.hetersys.graph.Node;
 
 public interface Exporter {
 	public void loadExistingFile(File file);	
-	public void updateFile(Node graph) throws IOException;
+	public void updateFile() throws IOException;
 }

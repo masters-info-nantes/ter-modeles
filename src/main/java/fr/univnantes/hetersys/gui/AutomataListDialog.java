@@ -15,6 +15,13 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
+/**
+ * This dialog shows the list of automata
+ * in the uppaal project
+ * 
+ * @author jeremy
+ */
+@SuppressWarnings("serial")
 public class AutomataListDialog extends JDialog {
 	
 	public AutomataListDialog(JFrame parent){

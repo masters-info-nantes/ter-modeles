@@ -7,8 +7,6 @@ import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
-import fr.univnantes.hetersys.Model;
-
 public class Controller implements ActionListener {
 	private Gui fenetre;
 	private Model model;
@@ -52,6 +50,10 @@ public class Controller implements ActionListener {
 		}
 	}
 	
+	/**
+	 * For buttons which launch file selecter
+	 * @param button Pressed button
+	 */
 	private void browseAction(JButton button){
 		JFileChooser fileChooser = new JFileChooser();
 		

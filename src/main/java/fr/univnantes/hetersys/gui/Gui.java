@@ -2,15 +2,11 @@ package fr.univnantes.hetersys.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,8 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
-import fr.univnantes.hetersys.App;
-
+@SuppressWarnings("serial")
 public class Gui extends JFrame implements Observer {
 
 	public final static String NO_FILE_SELECTED = "No file selected";
@@ -29,6 +24,7 @@ public class Gui extends JFrame implements Observer {
 	private JTextField textAutomataName;
 	
 	private AutomataListDialog dialogAutomata;
+	private AddChannelsDialog dialogChannels;
 	
 	public Gui(Controller controller){
 		super("Hetersys");
@@ -141,6 +137,40 @@ public class Gui extends JFrame implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		JOptionPane.showMessageDialog(this, (String)arg);
+		NotificationType notif = (NotificationType) arg;
+		Model model = (Model) o;
+		
+		switch(notif){
+			case DOT_PARSE_ERROR: case EXPORT_FAILURE: case EXPORT_SUCCESS:
+				JOptionPane.showMessageDialog(this, model.getLastMessage());
+			break;
+			
+			case CHANNELS_MISSING:
+				this.dialogChannels = new AddChannelsDialog(this, model.getChannelsToAdd(), model.getAutomataChannelNecessity());				
+				this.dialogChannels.display();
+					
+				// User cancel export
+				if(!this.dialogChannels.getContinueAction()){
+					return;
+				}
+				
+				// Continue export
+				model.addChannels(this.dialogChannels.getChannelsData());
+				model.continueRun();
+			break;
+			
+			case AUTOMATA_ALLREADY_EXISTS:
+				int reply = JOptionPane.showConfirmDialog(this, model.getLastMessage(), 
+						"Automata duplication", 
+						JOptionPane.YES_NO_OPTION
+				);
+				
+		        if(reply != JOptionPane.YES_OPTION){
+		        	return;
+		        }
+		        
+				model.continueRun();				
+			break;
+		}
 	}
 }

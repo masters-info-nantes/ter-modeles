@@ -35,7 +35,12 @@ public class UppaalExporter implements Exporter
 	private Document document;
 	private File uppaalProject;
 	private Set<String> channels;
-	private List<String> templateName;
+
+	/**
+	 * Fill if an automata with the same name has been
+	 * found in the uppaal project
+	 */
+	private Element existingTemplate;
 
 	/**
 	 * Set to true if at least one channel from the graph
@@ -48,18 +53,18 @@ public class UppaalExporter implements Exporter
 	private String automataName;
 	private Node graph;
 
-	public UppaalExporter(String automataName)
+	public UppaalExporter(String automataName, Node graph)
 	{
 		this.automataName = automataName;
+		this.graph = graph;		
 		this.channels = new HashSet<String>();
-
+		this.existingTemplate = null;
+		
 		this.channelLink = false;
 		this.channelsInAutomata = false;
 
 		this.uppaalProject = null;
-		this.graph = null;
 		this.document = null;
-		this.templateName = new ArrayList<String>();
 	}
 
 	@Override
@@ -80,31 +85,11 @@ public class UppaalExporter implements Exporter
 	}
 
 	@Override
-	public void updateFile(Node graph) throws IOException
+	public void updateFile() throws IOException
 	{
 		// Checks before export
 		if(this.uppaalProject == null){
 			throw new IOException("Uppaal project not yet loaded, please call loadExistingProject method.");
-		}
-
-		this.graph = graph;
-		this.checkChannelsExistence(graph, new ArrayList<Node>());
-
-		if(this.channelsInAutomata && !this.channelLink){
-
-			Scanner userInput = new Scanner(System.in);
-			System.out.println(
-					"No channels from the graph is in the Uppaal project. You will not be able to put\n" +
-							"your automata and those of the project together. Export anyway ? (yes/default no)"
-					);
-
-			String result = userInput.nextLine();
-			//userInput.close(); // Don't close
-
-			if(!"yes".equals(result)){
-				System.out.println("> Export has been canceled by user.");
-				return;
-			}
 		}
 
 		// Load xml structure
@@ -112,7 +97,7 @@ public class UppaalExporter implements Exporter
 		Element template = generateTemplate(this.graph);
 
 		// Search system element to insert the template before
-		Element system = null, existingTemplate = null;
+		Element system = null;
 		NodeList rootChildren = root.getChildNodes();
 
 		for (int i = 0; i < rootChildren.getLength(); i++){			
@@ -121,7 +106,80 @@ public class UppaalExporter implements Exporter
 			if(n.getNodeName().equals("system")){
 				system = (Element) n;
 			}
-			else if(n.getNodeName().equals("template")){
+		}
+
+		// Check project format
+		if(system == null){
+			throw new IOException("Cannot find <system> element in " + this.uppaalProject.getName());
+		}
+
+		if(this.existingTemplate == null){
+			root.insertBefore(template, system);
+		}
+		else {
+			root.replaceChild(template, this.existingTemplate);
+		}
+		
+		System.out.println("\tTemplate "+ this.automataName + " inserted with success!\n");
+		
+		// Save changes to uppaal project file
+		this.writeInFile();
+		System.out.println(
+				"> The uppaal project \"" + this.uppaalProject.getName() +
+				"\" has been updated with \"" + this.automataName + "\" automata"
+		);		
+	}
+
+	/*------------------------------------- Questions to user -------------------------------------*/	
+	public Set<String> checkChannelsExistence(){
+		return this.checkChannelsExistence(this.graph, new ArrayList<Node>());
+	}
+	private Set<String> checkChannelsExistence(Node node, List<Node> visitedNodes){
+		
+		Set<String> channelsToAdd = new HashSet<String>();
+		
+		for(Arc arc: node.getOutputArcs()){
+			String[] labelParse = DotImporter.parseDotLabel(arc.getName());
+			
+			// Channel found in arc label
+			if(labelParse.length == 2){
+				this.channelsInAutomata = true;
+				String channel = labelParse[0];
+				if(!this.channels.contains(channel)){
+					channelsToAdd.add(channel);
+				}
+				else {
+					this.channelLink = true;
+				}
+			}
+			
+			visitedNodes.add(node);
+			if(!visitedNodes.contains(arc.getNext())){
+				channelsToAdd.addAll(this.checkChannelsExistence(arc.getNext(), visitedNodes));
+			}
+		}
+		for (Arc arc : node.getInputArcs()) {
+			if(!visitedNodes.contains(arc.getNext())){
+				channelsToAdd.addAll(this.checkChannelsExistence(arc.getNext(), visitedNodes));
+			}
+		}
+		
+		return channelsToAdd;
+	}	
+	
+	public boolean checkAutomataHasChannelLink(){
+		return this.channelsInAutomata && this.channelLink;		
+	}
+	public boolean checkAutomataAllreadyExists(){
+		Element root = this.document.getDocumentElement();
+
+		// Search system element to insert the template before
+		NodeList rootChildren = root.getChildNodes();
+
+		for (int i = 0; i < rootChildren.getLength(); i++){			
+			org.w3c.dom.Node n = rootChildren.item(i);
+
+			if(n.getNodeName().equals("template")){
 				Element currentTemplate = (Element) n;
 
 				NodeList templateChildren = currentTemplate.getElementsByTagName("name");
@@ -134,85 +192,23 @@ public class UppaalExporter implements Exporter
 						System.out.println(current.getTextContent());
 						if(current.getTextContent().equals(this.automataName)){
 
-							existingTemplate = currentTemplate;
-
-							System.out.println("Can't add the new template : Already Exist\n");
-							System.out.println("Template " + this.automataName +" already exists, replace it? (yes/no)");
-							Scanner sc = new Scanner(System.in);
-
-							String ans = sc.nextLine();
-
-							if("yes".equals(ans)){
-								root.replaceChild(template, existingTemplate);								
-							}							
-							break;
+							this.existingTemplate = currentTemplate;
+							return true;
 						}
 					}
 				}
 			}
-		}
-
-		// Check project format
-		if(system == null){
-			throw new IOException("Cannot find <system> element in " + this.uppaalProject.getName());
-		}
-
-		if(existingTemplate == null){
-			System.out.println("\tTemplate "+ this.automataName + " inserted with success!\n");
-			root.insertBefore(template, system);
-		}
+		}	
 		
-		// Save changes to uppaal project file
-		this.writeInFile();
-		System.out.println(
-				"> The uppaal project \"" + this.uppaalProject.getName() +
-				"\" has been updated with \"" + this.automataName + "\" automata"
-		);		
+		return false;
 	}
-
-	/*-------------------------------------- Internal logic ---------------------------------------*/	
-	private void checkChannelsExistence(Node node, List<Node> visitedNodes){
-		for(Arc arc: node.getOutputArcs()){
-			String[] labelParse = DotImporter.parseDotLabel(arc.getName());
-			// Channel found in arc label
-			if(labelParse.length == 2){
-				this.channelsInAutomata = true;
-				String channel = labelParse[0];
-				if(!this.channels.contains(channel)){
-					Scanner userInput = new Scanner(System.in);
-					System.out.println(
-							"The channel \"" + channel + "\" is in the dot file but not in the Uppaal project.\n" +
-									"Add it to the project ? (yes/default no)"
-							);
-					String result = userInput.nextLine();
-					//userInput.close(); // Don't close
-					if("yes".equals(result)){
-						this.addChannel(channel);
-						this.channelLink = true;
-						System.out.println("Channel " + channel + " has been added to the Uppaal project.");
-					}
-				}
-				else {
-					this.channelLink = true;
-				}
-			}
-			visitedNodes.add(node);
-			if(!visitedNodes.contains(arc.getNext())){
-				this.checkChannelsExistence(arc.getNext(), visitedNodes);
-			}
-		}
-		for (Arc arc : node.getInputArcs()) {
-			if(!visitedNodes.contains(arc.getNext())){
-				this.checkChannelsExistence(arc.getNext(), visitedNodes);
-			}
-		}
-	}
+	
 	/*-------------------------------- Load and update project file -------------------------------*/	
 	private void loadChannels(){
 		channels.addAll(Arrays.asList("Riri", "Fifi", "Loulou"));
 		// TODO load channels from project file
 	}
-	private void addChannel(String channel){
+	public void addChannel(String channel){
 		this.channels.add(channel);
 		// TODO write in project file
 	}
@@ -231,6 +227,7 @@ public class UppaalExporter implements Exporter
 			System.err.println("Cannot write generated XML to " + this.uppaalProject.getAbsolutePath());
 		}
 	}
+	
 	/*--------------------------------- Generate parts of automata --------------------------------*/
 	private void generateNodes(Element parentElt, Node node, List<Node> visitedNodes, int compteur)
 	{
@@ -299,9 +296,5 @@ public class UppaalExporter implements Exporter
 		this.generateNodes(tpl, graph, new ArrayList<Node>(), 0);
 		this.generateTransitions(tpl, this.graph, new ArrayList<Node>());
 		return tpl;
-	}
-
-	List<String> getListTemplate(){
-		return templateName;
 	}
 }
