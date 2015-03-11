@@ -76,38 +76,46 @@ public class DotImporter extends Importer
 							   .trim()
 							   .split("->");
 		
+		String[] lastParseNode = parseDotNode(nodeTab[nodeTab.length-1]);
+		String label = "";
+		if(lastParseNode.length > 1)
+		{
+			label = lastParseNode[1];
+		}
+
 		for(int i = 0; i < nodeTab.length - 1; i++)
 		{	
-			// Parse node to get name and label separated
-			String[] startNodeTab = this.parseDotNode(nodeTab[i]),
-					 endNodeTab   = this.parseDotNode(nodeTab[i+1]);
-			
+			// Parse node to get name 
+			String startNodeTab = this.nodeName(nodeTab[i]),
+					 endNodeTab   = this.nodeName(nodeTab[i+1]);
+
+			/*
 			// Don't use label on start node
 			if(startNodeTab.length > 1 ){
 				nodeTab[i] = startNodeTab[0];
-			}
+			}*/
 			
 			if(this.graph == null){
-				this.graph = new Node(nodeTab[i]);
+				this.graph = new Node(startNodeTab);
 			}
 			
 			// Retrieve start and end node in the graph
 			// Creates them if they don't exist
-			Node startNode = this.graph.findNode(new Node(nodeTab[i]));	
+			Node startNode = this.graph.findNode(new Node(startNodeTab));	
 			if(startNode == null){
-				startNode = new Node(nodeTab[i]);
+				startNode = new Node(startNodeTab);
 			}						
 			
-			Node endNode = this.graph.findNode(new Node(endNodeTab[0]));
+			Node endNode = this.graph.findNode(new Node(endNodeTab));
 			if(endNode == null){
-				endNode = new Node(endNodeTab[0]);
+				endNode = new Node(endNodeTab);
 			}
 			
 			// Create arcs and update graph
-			Arc inArc = new Arc((endNodeTab.length > 1) ? endNodeTab[1] : "", endNode);
+			Arc inArc = new Arc(label, endNode);
 			startNode.addOutputArc(inArc);
 			
-			Arc outArc = new Arc("", startNode);
+			Arc outArc = new Arc(label, startNode);
 			endNode.addInputArc(outArc);
 		}
 	}
@@ -138,6 +146,12 @@ public class DotImporter extends Importer
 		}
 		
 		return (String[]) parsedNode.toArray(new String[parsedNode.size()]);
+	}
+
+	private String nodeName(String node) throws ParseException
+	{
+		String[] parseNode = parseDotNode(node);
+		return parseNode[0];
 	}
 	
 	/**
