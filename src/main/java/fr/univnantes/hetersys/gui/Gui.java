@@ -5,23 +5,35 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
-public class Gui extends JFrame implements ActionListener {
+import fr.univnantes.hetersys.App;
 
+public class Gui extends JFrame implements Observer {
+
+	public final static String NO_FILE_SELECTED = "No file selected";
+	
 	private JTextField textDotPath;
 	private JTextField textUppaalPath;
+	private JTextField textAutomataName;
 	
-	public Gui(){
+	private AutomataListDialog dialogAutomata;
+	
+	public Gui(Controller controller){
 		super("Hetersys");
+		
+		this.dialogAutomata = new AutomataListDialog(this);
 		
 		// Interface
 		JPanel panelRoot = new JPanel();
@@ -34,19 +46,19 @@ public class Gui extends JFrame implements ActionListener {
 		panelResources.setLayout(new SpringLayout());
 		panelResources.setBorder(BorderFactory.createTitledBorder("Resources"));		
 		
-		this.textDotPath = new JTextField("No file selected");
+		this.textDotPath = new JTextField(/*Gui.NO_FILE_SELECTED*/"dotFile/test.dot");
 		this.textDotPath.setEditable(false);
 		
-		this.textUppaalPath = new JTextField("No file selected");
+		this.textUppaalPath = new JTextField(/*Gui.NO_FILE_SELECTED*/"jobbers.xml");
 		this.textUppaalPath.setEditable(false);
 		
 		JButton buttonBrowseDot = new JButton("Browse..");
 		buttonBrowseDot.setToolTipText("Dot file");
-		buttonBrowseDot.addActionListener(this);
+		buttonBrowseDot.addActionListener(controller);
 		
 		JButton buttonBrowseUppaal = new JButton("Browse..");
 		buttonBrowseUppaal.setToolTipText("Uppaal file");
-		buttonBrowseUppaal.addActionListener(this);
+		buttonBrowseUppaal.addActionListener(controller);
 		
 		panelResources.add(new JLabel("Automata (Dot): "));
 		panelResources.add(this.textDotPath);
@@ -62,8 +74,9 @@ public class Gui extends JFrame implements ActionListener {
 		panelAutomata.setLayout(new SpringLayout());
 		panelAutomata.setBorder(BorderFactory.createTitledBorder("Automata"));
 		
-		JTextField textAutomataName = new JTextField("automata name");
+		textAutomataName = new JTextField(/*""*/"test");
 		JButton buttonAutomataList = new JButton("Show list");
+		buttonAutomataList.addActionListener(controller);
 		
 		panelAutomata.add(new JLabel("Automata name: "));
 		panelAutomata.add(textAutomataName);
@@ -77,7 +90,9 @@ public class Gui extends JFrame implements ActionListener {
 		panelExport.setLayout(new BorderLayout());
 		panelExport.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		
-		JButton buttonExport = new JButton("Export..");
+		JButton buttonExport = new JButton("Export");
+		buttonExport.addActionListener(controller);
+		
 		panelExport.add(buttonExport, BorderLayout.EAST);
 		
 		// End stuff
@@ -94,27 +109,38 @@ public class Gui extends JFrame implements ActionListener {
 		this.setVisible(true);
 	}
 
+	/*----------------------- Access to data -----------------------------*/
+	public String getDotFilePath(){
+		return this.textDotPath.getText();
+	}
+	
+	public String getUppaalFilePath(){
+		return this.textUppaalPath.getText();
+	}
+
+	public String getAutomataName(){
+		return this.textAutomataName.getText();
+	}
+	
+	/*---------------------- Controller setters ---------------------------*/
+	public void displayAutomataList(){
+		dialogAutomata.display();		
+	}
+	
+	public void updateDotPath(String path){
+		this.textDotPath.setText(path);
+	}	
+	
+	public void updateUppaalPath(String path){
+		this.textUppaalPath.setText(path);
+	}	
+
+	public void afficherInfo(String content){
+		JOptionPane.showMessageDialog(this, content);
+	}
+	
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		JButton buttonSource = (JButton) e.getSource();
-		
-		JFileChooser fileChooser = new JFileChooser();
-		
-		int fileSelected = fileChooser.showOpenDialog(null);
-		if(fileSelected != JFileChooser.APPROVE_OPTION){
-			return;
-		}
-		
-		File selectedFile = fileChooser.getSelectedFile();
-		switch(buttonSource.getToolTipText()){
-			case "Dot file":
-				textDotPath.setText(selectedFile.getAbsolutePath());
-			break;
-			
-			case "Uppaal file":
-				textUppaalPath.setText(selectedFile.getAbsolutePath());
-			break;			
-		}
+	public void update(Observable o, Object arg) {
+		JOptionPane.showMessageDialog(this, (String)arg);
 	}
 }
