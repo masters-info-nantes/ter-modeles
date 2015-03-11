@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,10 +20,13 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
 import fr.univnantes.hetersys.graph.Arc;
 import fr.univnantes.hetersys.graph.Node;
 import fr.univnantes.hetersys.importers.DotImporter;
@@ -31,6 +35,11 @@ public class UppaalExporter implements Exporter
 	private Document document;
 	private File uppaalProject;
 	private Set<String> channels;
+	private List<String> templateName;
+	private Element templateBis = null;
+	private Element template = null;
+	private Element currentTemplate = null;
+	
 	/**
 	 * Set to true if at least one channel from the graph
 	 * is in the Uppaal project
@@ -50,6 +59,7 @@ public class UppaalExporter implements Exporter
 		this.uppaalProject = null;
 		this.graph = null;
 		this.document = null;
+		this.templateName = new ArrayList<String>();
 	}
 	@Override
 	public void loadExistingFile(File file) {
@@ -90,10 +100,9 @@ public class UppaalExporter implements Exporter
 		}
 		// Load xml structure
 		Element root = this.document.getDocumentElement();
-		Element template = generateTemplate(root, this.graph);
+		template = generateTemplate(root, this.graph);
 		// Search system element to insert the template before
 		Element system = null;
-		Element templateBis = null;
 		NodeList rootChildren = root.getChildNodes();
 		for (int i = 0; i < rootChildren.getLength(); i++){
 			org.w3c.dom.Node n = rootChildren.item(i);
@@ -102,31 +111,38 @@ public class UppaalExporter implements Exporter
 			}
 			if(n.getNodeName().equals("template")){
 				templateBis = (Element) n;
-				
-				
+
+
 				NodeList templateChildren = templateBis.getElementsByTagName("name");
 				for(int j = 0; j < templateChildren.getLength(); j++){
-					
+
 					Element current = (Element) templateChildren.item(j);
 					if(current.getParentNode().getNodeName().equals("template")){
-						
+
 						System.out.println(current.getTextContent());
 						if(current.getTextContent().equals(this.automataName)){
+							currentTemplate = current;
+							//System.out.println(current.getTextContent());
 							exist = true;
 							System.out.println("\tCan't add the new template : Already Exist\n");
 						}
 					}
 				}
-				
+
 			}
 		}
-		
-		
-		
+
+
+
 		if(system == null){
 			throw new IOException("Cannot find <system> element in " + this.uppaalProject.getName());
 		}
+
+		
+		
 		if(exist == false){
+
+			System.out.println("\tTemplate "+ this.automataName + " inserted with succes!\n");
 			root.insertBefore(template, system);
 			// Save changes to uppaal project file
 			this.writeInFile();
@@ -134,7 +150,29 @@ public class UppaalExporter implements Exporter
 					"> The uppaal project \"" + this.uppaalProject.getName() +
 					"\" has been updated with \"" + this.automataName + "\" automata"
 					);
+
+		}else
+		{
+			System.out.println("Template " + this.automataName +" already exists, replace it? (yes/no)");
+			Scanner sc = new Scanner(System.in);
+
+			String ans = sc.nextLine();
+
+			if("yes".equals(ans)){
+				//System.out.println(templateBis.getTextContent());
+				//n2 pas bon
+				org.w3c.dom.Node node = (org.w3c.dom.Node) template;
+				root.replaceChild(templateBis, node);
+				
+			}else
+			{
+				System.out.println("toto");
+			}
 		}
+
+
+
+
 	}
 	/*-------------------------------------- Internal logic ---------------------------------------*/	
 	private void checkChannelsExistence(Node node, List<Node> visitedNodes){
@@ -265,5 +303,9 @@ public class UppaalExporter implements Exporter
 		this.generateNodes(tpl, graph, new ArrayList<Node>(), 0);
 		this.generateTransitions(tpl, this.graph, new ArrayList<Node>());
 		return tpl;
+	}
+
+	List<String> getListTemplate(){
+		return templateName;
 	}
 }
