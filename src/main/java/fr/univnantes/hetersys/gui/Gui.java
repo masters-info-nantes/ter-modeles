@@ -14,6 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import fr.univnantes.hetersys.gui.dialogs.AddChannelsDialog;
+import fr.univnantes.hetersys.gui.dialogs.AutomataListDialog;
+import fr.univnantes.hetersys.gui.libs.SpringUtilities;
+
 @SuppressWarnings("serial")
 public class Gui extends JFrame implements Observer {
 
@@ -135,6 +139,7 @@ public class Gui extends JFrame implements Observer {
 		JOptionPane.showMessageDialog(this, content);
 	}
 	
+	/*---------------------- Models notify ---------------------------*/	
 	@Override
 	public void update(Observable o, Object arg) {
 		NotificationType notif = (NotificationType) arg;
@@ -167,8 +172,7 @@ public class Gui extends JFrame implements Observer {
 				
 		        if(reply != JOptionPane.YES_OPTION){
 		        	return;
-		        }
-		        
+		        }		        
 				model.continueRun();				
 			break;
 		}

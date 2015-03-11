@@ -1,4 +1,4 @@
-package fr.univnantes.hetersys.gui;
+package fr.univnantes.hetersys.gui.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -104,6 +104,11 @@ public class AddChannelsDialog extends JDialog {
 		this.setVisible(true);
 	}
 	
+	/**
+	 * Changes set of channel in comprehensible structure
+	 * for the JTable component
+	 * @param channels
+	 */
 	private void importChannelsInTable(Set<String> channels){		
 		this.channelsData = new Object[channels.size()][2];
 		for (int i = 0; i < channelsData.length; i++) {
@@ -112,6 +117,12 @@ public class AddChannelsDialog extends JDialog {
 		}
 	}
 	
+	/**
+	 * Notice the user if the automata has no
+	 * common channels with uppaal project
+	 * @see channelNecessity
+	 * @return true if there are at least one common channel, false otherwise
+	 */
 	private boolean checkCanExit(){
 		if(this.channelNecessity){
 			int reply = JOptionPane.showConfirmDialog(this, 
@@ -126,6 +137,7 @@ public class AddChannelsDialog extends JDialog {
 		return true;
 	}
 	
+	// Getters
 	public Object[][] getChannelsData(){
 		return this.channelsData;
 	}

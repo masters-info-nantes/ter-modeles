@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
 
-package fr.univnantes.hetersys.gui;
+package fr.univnantes.hetersys.gui.libs;
 
 import javax.swing.*;
 import javax.swing.SpringLayout;

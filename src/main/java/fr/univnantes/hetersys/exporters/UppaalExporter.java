@@ -1,11 +1,11 @@
 package fr.univnantes.hetersys.exporters;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -22,7 +22,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -30,10 +29,20 @@ import org.xml.sax.SAXException;
 import fr.univnantes.hetersys.graph.Arc;
 import fr.univnantes.hetersys.graph.Node;
 import fr.univnantes.hetersys.importers.DotImporter;
+
 public class UppaalExporter implements Exporter
 {
 	private Document document;
+	
+	/**
+	 * Uppaal project file
+	 */
 	private File uppaalProject;
+	
+	/**
+	 * Channels found in the uppaal project
+	 * @see loadChannels
+	 */
 	private Set<String> channels;
 
 	/**
@@ -49,8 +58,21 @@ public class UppaalExporter implements Exporter
 	 * @see updateFile
 	 */
 	private boolean channelLink;
+	
+	/**
+	 * Set to true if the automate contains a channel
+	 */
 	private boolean channelsInAutomata;
+	
+	/**
+	 * Name of the automata to insert, it must be different
+	 * from others allready in the uppaal project
+	 */
 	private String automataName;
+	
+	/**
+	 * Graph which represents the dot automata
+	 */
 	private Node graph;
 
 	public UppaalExporter(String automataName, Node graph)
@@ -113,6 +135,7 @@ public class UppaalExporter implements Exporter
 			throw new IOException("Cannot find <system> element in " + this.uppaalProject.getName());
 		}
 
+		// Update project file
 		if(this.existingTemplate == null){
 			root.insertBefore(template, system);
 		}
@@ -130,7 +153,11 @@ public class UppaalExporter implements Exporter
 		);		
 	}
 
-	/*------------------------------------- Questions to user -------------------------------------*/	
+	/*------------------------------------- Questions to user -------------------------------------*/
+	/**
+	 * Returns all channels found in the automata
+	 * @return Channels from automata
+	 */
 	public Set<String> checkChannelsExistence(){
 		return this.checkChannelsExistence(this.graph, new ArrayList<Node>());
 	}
@@ -167,31 +194,45 @@ public class UppaalExporter implements Exporter
 		return channelsToAdd;
 	}	
 	
+	/**
+	 * Check if the automata has common at least one common
+	 * channel with thoses in the uppaal project
+	 * @return true if at least one common channel, false otherwise
+	 */
 	public boolean checkAutomataHasChannelLink(){
 		return this.channelsInAutomata && this.channelLink;		
 	}
+	
+	/**
+	 * Two automata can't have the same name, this method checks
+	 * if one automata from the uppaal project has the name 
+	 * given by the user
+	 * @return true if another automata has the same name, false otherwise
+	 */
 	public boolean checkAutomataAllreadyExists(){
 		Element root = this.document.getDocumentElement();
-
-		// Search system element to insert the template before
 		NodeList rootChildren = root.getChildNodes();
 
+		// "template" represents one automata which is a direct child
+		// of the root 
+		// It's sub element "name" contains the name of the automata
 		for (int i = 0; i < rootChildren.getLength(); i++){			
 			org.w3c.dom.Node n = rootChildren.item(i);
 
+			// Looking for template
 			if(n.getNodeName().equals("template")){
 				Element currentTemplate = (Element) n;
 
+				// Looking for name 
 				NodeList templateChildren = currentTemplate.getElementsByTagName("name");
 				for(int j = 0; j < templateChildren.getLength(); j++){
 
+					// The "location" subelement has also a "name" sub element, so check
 					Element current = (Element) templateChildren.item(j);
 					if(current.getParentNode().getNodeName().equals("template")){
 
 						// The template allready exists and has been found
-						System.out.println(current.getTextContent());
 						if(current.getTextContent().equals(this.automataName)){
-
 							this.existingTemplate = currentTemplate;
 							return true;
 						}
@@ -204,14 +245,27 @@ public class UppaalExporter implements Exporter
 	}
 	
 	/*-------------------------------- Load and update project file -------------------------------*/	
+	/**
+	 * Loads all channels contained in the uppaal project
+	 */
 	private void loadChannels(){
 		channels.addAll(Arrays.asList("Riri", "Fifi", "Loulou"));
 		// TODO load channels from project file
 	}
+	
+	/**
+	 * Adds the given channel to the uppaal project
+	 * @param channel Channel name to insert
+	 */
 	public void addChannel(String channel){
 		this.channels.add(channel);
 		// TODO write in project file
 	}
+	
+	/**
+	 * All changed are made in the loaded document structure
+	 * This method make theses changes real in the uppaal project file
+	 */
 	private void writeInFile(){
 		Transformer transformer;
 		try {
@@ -229,27 +283,86 @@ public class UppaalExporter implements Exporter
 	}
 	
 	/*--------------------------------- Generate parts of automata --------------------------------*/
+	/**
+	 * Changes the graph internal representation in xml uppaal
+	 * In uppaal xml: "template" element contains one automata
+	 * @param graph Graph which represents an automata
+	 * @return Generated xml element
+	 */
+	private Element generateTemplate(Node graph)
+	{
+		Element tpl = this.document.createElement("template"),
+				name = this.document.createElement("name");
+		
+		name.setAttribute("x", "0");
+		name.setAttribute("x", "0");
+		
+		name.appendChild(this.document.createTextNode(this.automataName));
+		tpl.appendChild(name);
+		
+		this.generateDeclaration(tpl);
+		this.generateNodes(tpl, graph, new ArrayList<Node>(), 0);
+		this.generateTransitions(tpl, this.graph, new ArrayList<Node>());
+		
+		return tpl;
+	}
+	
+	/**
+	 * Browse the automata graph and turn nodes into xml uppaal nodes
+	 * 
+	 * <location id="a" x="0" y="0">
+     * 		<name>a</name>
+     * </location>
+     * 
+     * @see graph
+     *   
+	 * @param parentElt Element which represents the automata (template element)
+	 * @param node Current node to transform (for recursivity)
+	 * @param visitedNodes Nodes allready visited (for recursivity)
+	 * @param compteur Avoid setting all nodes in the position
+	 */
 	private void generateNodes(Element parentElt, Node node, List<Node> visitedNodes, int compteur)
 	{
 		if(visitedNodes.contains(node)){
 			return;
 		}
 		visitedNodes.add(node);
+		
 		Element nodeElt = this.document.createElement("location");
 		nodeElt.setAttribute("id", node.getName());
 		nodeElt.setAttribute("x", String.valueOf(compteur));
 		nodeElt.setAttribute("y", String.valueOf(compteur));
+		
 		Element nameElt = this.document.createElement("name");
 		nameElt.appendChild(this.document.createTextNode(node.getName()));
 		nodeElt.appendChild(nameElt);
+		
 		parentElt.appendChild(nodeElt);
+		
 		List<Arc> allArcs = new ArrayList<Arc>();
 		allArcs.addAll(node.getOutputArcs());
 		allArcs.addAll(node.getInputArcs());
+		
 		for(Arc arc: allArcs){
 			this.generateNodes(parentElt, arc.getNext(), visitedNodes, compteur + 70);
 		}
 	}
+	
+	/**
+	 * Browse the automata graph and turn arcs into xml uppaal transitions
+	 *         
+	 * <transition>
+     *    <source ref="a"/>
+     *    <target ref="b"/>
+     *    <label kind="synchronisation">vendredi?13</label>
+     * </transition>
+     *  
+     * @see graph
+     * 
+	 * @param parentElt Element which represents the automata (template element)
+	 * @param node Current node with arcs to transform (for recursivity)
+	 * @param visitedNodes Nodes allready visited (for recursivity)
+	 */
 	private void generateTransitions(Element parentElt, Node node, List<Node> visitedNodes)
 	{
 		for(Arc arc: node.getOutputArcs()){
@@ -279,22 +392,15 @@ public class UppaalExporter implements Exporter
 			}
 		}
 	}
+	
+	/**
+	 * Generate declaration sub element contains some codes
+	 * Don't know what exactly..
+	 * @param parentElt Element which represents the automata (template element)
+	 */
 	private void generateDeclaration(Element parentElt)
 	{
 		Element decl = this.document.createElement("declaration");
 		parentElt.appendChild(decl);
-	}
-	private Element generateTemplate(Node graph)
-	{
-		Element tpl = this.document.createElement("template"),
-				name = this.document.createElement("name");
-		name.setAttribute("x", "0");
-		name.setAttribute("x", "0");
-		name.appendChild(this.document.createTextNode(this.automataName));
-		tpl.appendChild(name);
-		this.generateDeclaration(tpl);
-		this.generateNodes(tpl, graph, new ArrayList<Node>(), 0);
-		this.generateTransitions(tpl, this.graph, new ArrayList<Node>());
-		return tpl;
 	}
 }

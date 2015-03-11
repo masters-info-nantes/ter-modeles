@@ -1,4 +1,4 @@
-package fr.univnantes.hetersys.gui;
+package fr.univnantes.hetersys.gui.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -33,7 +33,7 @@ public class AutomataListDialog extends JDialog {
 		panelRoot.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		setContentPane(panelRoot);
 		
-		// Content
+		// List of automata names
 		String[] data = { "Riri", "Fifi", "Loulou" };
 		JList listAutomata = new JList<String>(data);		
 		listAutomata.setEnabled(false);
@@ -54,13 +54,14 @@ public class AutomataListDialog extends JDialog {
 		panelRoot.add(labelWarning, BorderLayout.NORTH);
 		panelRoot.add(listAutomata, BorderLayout.CENTER);
 		
+		// Bottom buttons
 		JPanel panelBottom = new JPanel();
 		panelBottom.setLayout(new BorderLayout());
 		panelBottom.setBorder(BorderFactory.createEmptyBorder(5, 90, 0, 90));		
 		panelBottom.add(buttonClose, BorderLayout.CENTER);
 		
+		// End stuff
 		panelRoot.add(panelBottom, BorderLayout.SOUTH);
-		
 		this.setPreferredSize(new Dimension(300, 300));
 	}
 	

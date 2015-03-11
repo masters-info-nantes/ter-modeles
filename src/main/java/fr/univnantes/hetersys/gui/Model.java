@@ -25,6 +25,9 @@ public class Model extends Observable {
 	private Importer importer;
 	private UppaalExporter exporter;
 	
+	/**
+	 * Channels in automata and not in the uppaal project
+	 */
 	private Set<String> channelsToAdd;
 	
 	/**
@@ -48,6 +51,10 @@ public class Model extends Observable {
 		this.runStep = 0;
 	}
 	
+	/**
+	 * Main loop which can be interrupted
+	 * @see runStep
+	 */
 	public void run(){	
 		
 		// Import the dot file
@@ -114,10 +121,20 @@ public class Model extends Observable {
 		this.notifyObservers(NotificationType.EXPORT_SUCCESS);
 	}
 	
+	/**
+	 * Continue the main method execution after asking question
+	 * to the user with the gui
+	 */
 	public void continueRun(){
 		this.run();
 	}
 	
+	/**
+	 * Add channels from the gui (in the automata) in
+	 * the uppaal project
+	 * @param channels Table of channels with name and true/false
+	 * it must be added or not
+	 */
 	public void addChannels(Object[][] channels){
 		for (int i = 0; i < channels.length; i++) {
 			String channelName = (String) channels[i][0];
@@ -129,6 +146,7 @@ public class Model extends Observable {
 		}
 	}
 	
+	// Getters for gui
 	public boolean getAutomataChannelNecessity(){
 		return !this.exporter.checkAutomataHasChannelLink();
 	}

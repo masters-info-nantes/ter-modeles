@@ -14,7 +14,11 @@ import fr.univnantes.hetersys.graph.Node;
 
 public class DotImporter extends Importer
 {
-	
+	/**
+	 * Number of current line which is analyzed (begins at 1)
+	 * Used if an exception is raised
+	 * @see load
+	 */
 	private int currentLine;
 
 	public DotImporter()
@@ -35,7 +39,7 @@ public class DotImporter extends Importer
 			return false;
 		}
 
-		// On boucle sur chaque champ detecté
+		// Analyse each lines separatly
 		while (scanner.hasNextLine()) 
 		{
 		    String line = scanner.nextLine();			
@@ -53,6 +57,11 @@ public class DotImporter extends Importer
 		return true;
 	}
 	
+	/**
+	 * Determinates if a line contains nodes and arcs
+	 * @param line Line being analyzed
+	 * @return true if it contains nodes and arcs, false otherwise
+	 */
 	private boolean isUsefulLine(String line)
 	{
 		// Graph definition line
@@ -69,6 +78,15 @@ public class DotImporter extends Importer
 		return true;
 	}
 	
+	/**
+	 * Analyze one line of dot language and generate the graph
+	 * in the internal representation
+	 * 
+	 * @see Node
+	 * 
+	 * @param line Line being analyzed
+	 * @throws ParseException Malformed dot line
+	 */
 	private void loadLine(String line) throws ParseException
 	{						
 		String[] nodeTab = line.replaceAll(";", "")
@@ -76,24 +94,25 @@ public class DotImporter extends Importer
 							   .trim()
 							   .split("->");
 		
+		// The short expression
+		// a -> b -> c[label=foo]
+		// means each arcs have the label "foo"
 		String[] lastParseNode = parseDotNode(nodeTab[nodeTab.length-1]);
 		String label = "";
+		
 		if(lastParseNode.length > 1)
 		{
 			label = lastParseNode[1];
 		}
 
+		// In dot some short expression exists like:  
+		// a -> b -> c 
+		// Analyze each of them here
 		for(int i = 0; i < nodeTab.length - 1; i++)
 		{	
 			// Parse node to get name 
 			String startNodeTab = this.nodeName(nodeTab[i]),
-					 endNodeTab   = this.nodeName(nodeTab[i+1]);
-
-			/*
-			// Don't use label on start node
-			if(startNodeTab.length > 1 ){
-				nodeTab[i] = startNodeTab[0];
-			}*/
+					 endNodeTab = this.nodeName(nodeTab[i+1]);
 			
 			if(this.graph == null){
 				this.graph = new Node(startNodeTab);
