@@ -7,12 +7,16 @@ import java.text.ParseException;
 import fr.univnantes.hetersys.exporters.Exporter;
 import fr.univnantes.hetersys.exporters.UppaalExporter;
 import fr.univnantes.hetersys.graph.Node;
+import fr.univnantes.hetersys.gui.Gui;
 import fr.univnantes.hetersys.importers.DotImporter;
 import fr.univnantes.hetersys.importers.Importer;
 
 public class App {
 	public static void main(String[] args) 
 	{
+		//Gui fenetre = new Gui();
+		//fenetre.display();		
+		
 		System.out.println("> Import dot file");
 		
 		Importer importer = new DotImporter();
@@ -33,6 +37,6 @@ public class App {
 		} 
 		catch (IOException e) {
 			System.err.println(e.getMessage());
-		}	
+		}			
 	}	
 }

@@ -10,3 +10,4 @@ target
 .settings/
 test.xml
 jobbers.xml
+.metadata/
