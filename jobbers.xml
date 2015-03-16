@@ -230,6 +230,55 @@ chan getMal, putMal;
             <label kind="synchronisation">iter?90</label>
         </transition>
     </template>
+    <template>
+        <name x="0">toto</name>
+        <declaration/>
+        <location id="a" x="0" y="0">
+            <name>a</name>
+        </location>
+        <location id="b" x="70" y="70">
+            <name>b</name>
+        </location>
+        <location id="c" x="140" y="140">
+            <name>c</name>
+        </location>
+        <location id="d" x="140" y="140">
+            <name>d</name>
+        </location>
+        <location id="j" x="210" y="210">
+            <name>j</name>
+        </location>
+        <location id="e" x="210" y="210">
+            <name>e</name>
+        </location>
+        <transition>
+            <source ref="a"/>
+            <target ref="b"/>
+            <label kind="synchronisation">value?13</label>
+        </transition>
+        <transition>
+            <source ref="b"/>
+            <target ref="c"/>
+            <label kind="synchronisation">value?13</label>
+        </transition>
+        <transition>
+            <source ref="b"/>
+            <target ref="d"/>
+        </transition>
+        <transition>
+            <source ref="d"/>
+            <target ref="j"/>
+        </transition>
+        <transition>
+            <source ref="e"/>
+            <target ref="d"/>
+        </transition>
+        <transition>
+            <source ref="a"/>
+            <target ref="d"/>
+            <label kind="synchronisation">iter?90</label>
+        </transition>
+    </template>
     <system>//Insert process assignments.
 
 Hammer1 := Hammer();

@@ -219,16 +219,19 @@ public class UppaalExporter implements Exporter
 	private void loadChannels(){
 		channels.addAll(Arrays.asList("Riri", "Fifi", "Loulou"));
 		// TODO load channels from project file
-		Pattern pattern = Pattern.compile("chan ((\\w+)(, )?)?\\w+;");
+		Pattern pattern = Pattern.compile("chan (?:(\\w+)(?:, )?)?(\\w+);");
 		XPathFactory xPathfactory = XPathFactory.newInstance();
 		XPath xpath = xPathfactory.newXPath();
 		try {
 			XPathExpression expr = xpath.compile("nta/declaration");
 			String string = (String) expr.evaluate(this.document, XPathConstants.STRING);
 			Matcher matcher = pattern.matcher(string);
-			System.out.println(matcher.groupCount());
+			//System.out.println(matcher.groupCount());
+			//L'expression ne gere que dans le cas de 	
 			while(matcher.find()){	
-				channels.add(matcher.group(2)); //Manque la seconde partie de l'expression
+				channels.add(matcher.group(1));
+				channels.add(matcher.group(2));
+				System.out.println(matcher.group(1));
 				System.out.println(matcher.group(2));
 			}
 
