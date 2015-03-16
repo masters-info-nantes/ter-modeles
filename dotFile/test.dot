@@ -1,7 +1,7 @@
  digraph mon_graphe {
-	a -> b -> c[label=vendredi?13];
+	a -> b -> c[label=value?13];
 	b -> d;
-	a->d[label=superman];
+	a->d[label=iter?90];
 	e->d;
 	d-> j;
  }

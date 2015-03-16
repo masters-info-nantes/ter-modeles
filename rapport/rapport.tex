@@ -109,10 +109,10 @@ MC : Maître de conférence, P : Profeseur, D : Doctorant\\
 \chapter{Présentation du sujet}
 \section{Problématique}
 
-\paragraph*{Contexte} : Approches formelle des systèmes embarqués communiquants.\\
+\paragraph*{Contexte} : Approches formelles des systèmes embarqués communiquants.\\
 
 La construction rigoureuse d'un logiciel se fait à partir de son modèle. Pour des logiciels complexes (par exemple ceux
-qui ont de nombreux composants différents -- hétérogènes-- et qui communiquent), on a affaire à plusieurs modèles
+qui ont de nombreux composants différents -- hétérogènes-- et qui communiquent), on dispose de plusieurs modèles
 (hétérogènes aussi) qui doivent intérargir de façon cohérente, pour garantir l'interopérabilité sémantique entre les
 modèles puis les composants logiciels. Le domaine des systèmes embarqués (et aussi des objets connectés) regorge
 d'exemples.\\
@@ -136,7 +136,7 @@ Pour répondre à la problématique, l'équipe AeLoS nous a proposé 3 façons d
 faire tout en nous laissant la liberté d'en proposer d'autres.
 \\\\
 Dans le but de simplifier les exemples, nous avons fait le choix de représenter 
-les modèles comme des formes géométriques que l'on essayerai d'emboiter.
+les modèles comme des formes géométriques que l'on essayerais d'emboiter.
 \\\\
 La première solution consiste à adapter un des modèles au deuxième quand cela 
 est possible. On peut prendre l'exemple du théorème de Kleene qui assure qu'un 
@@ -148,6 +148,9 @@ rationnelle et vice et versa.
 	\includegraphics[scale=1]{ressources/solution1.png}
 	\caption{Solution 1 - Adaptation d'un modèle}
 \end{figure}
+
+Dans cet exemple c'est le composant de gauche qui s'est adapté pour pouvoir intéragir
+avec la partie droite.
 \newpage
 L'approche qui parait la plus évidente mais qui peut se révéler complexe 
 consiste à intégrer un troisième modèle dans le système. Ce dernier va alors 
@@ -171,20 +174,28 @@ en partie ou pas du tout.
 	\caption{Solution 3 - Plug'N'Check}
 \end{figure}
 
+L'exemple montre que certaines parties sont satisfaites mais d'autres parties ne 
+peuvent pas communiquer.
+\\\\
 Dans le cadre de notre stage d'initiation à la recherche, nous nous sommes 
 orientés vers la première solution. Nous avons donc entrepris de transformer 
 n'importe quel modèle dans un language commun afin de permettre de les 
 interfacer.
-
+\\\\
+Il est admis que les automates sont des une spécialisation de graphe, ce qui 
+signifie que n'importe quel automate peut-être repésenté sous forme de graphe. 
+C'est la raison qui nous a poussé à utiliser le language \emph{DOT} 
 \newpage
 \section{UPPAAL : un outil de modelisation des automates}
 UPPAAL est un environnement intégré d'outils pour la modélisation , la validation et la vérification des systèmes temps réel modélisés comme des réseaux d' automates.
+\\\\
 Uppaal se compose de trois parties principales: 
 \begin{itemize}[label=$\circ$]
   \item{ un langage de description}
   \item{ un simulateur}
   \item{ un vérificateur de modèle}
 \end{itemize} 
+
 
   Le langage de description est un langage de commande non-déterministe avec des types de données (par exemple des entiers , des tableaux, etc. ) . Il ce sert de la modélisation ou du langage de conception pour décrire le comportement du système grâce à des réseaux d'automates étendus avec des variables d' horloge et des données .\\ 
 
@@ -229,5 +240,136 @@ graph monGraphe {
   \includegraphics[scale=0.3]{ressources/grapheO.png}
 \end{figure}
 
+\newpage
+\section{Hetersys : notre solution}
+\subsection{Introduction}
+
+Notre but est de pouvoir composer n'importe quel type d'automate à l'aide du logiciel 
+UPPAAL. Celui-ci propose de créer des automates et de les rassembler sous forme de projets 
+mais il faut obligatoirement dessiner ces automates avec les outils mis à disposition.
+\\\\
+Etant donné que les automates sont un sous-ensemble des graphes, ce logiciel propose 
+d'importer directement un automate -- décrit sous forme de graphe -- dans un projet 
+UPPAAL pré-existant. 
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{ressources/ProgramScheme.png}
+  \caption{Entrées et sorties du programme}
+\end{figure}
+
+Pour la description du graphe, nous avons choisi de nous appuyer
+sur le format DOT bien connu qui est selon nous un langage très simple et minimaliste 
+qui permet de construire des graphes très rapidement.
+
+\subsection{Fenêtre principale}
+
+Il s'agit du premier élément auquel l'utilisateur est confronté mais l'interface a été 
+pensée pour faciliter l'apprentissage.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.6]{ressources/gui/home.png}
+  \caption{Fenêtre principale}
+\end{figure}
+
+En effet elle est décomposée en 2 parties: \emph{Resources} et \emph{Automata}. 
+\\\\
+La première partie regroupe les fichiers dont le programme à besoin en entrée à savoir 
+un automate -- décrit sous forme de graphe en DOT -- et un projet UPPAAL pré-existant.
+\\\\
+La seconde section s'intéresse à l'automate qui sera ajouté dans le projet. Dans un projet
+UPPAAL, chaque automate a un nom pour pouvoir l'identifier de manière unique ce qui veux 
+dire que deux automates ne peuvent pas avoir le même nom. C'est pourquoi le bouton 
+\og{}Show list\fg{} permet d'afficher le nom des automates déjà présents dans le projet 
+afin de ne pas les réutiliser.
+\\\\
+Un appui sur le bouton export permet simplement d'exporter l'automate -- au format DOT -- 
+dans le projet UPPAAL donné.
+
+\subsection{Gestion des canaux}
+
+L'automate donné en entrée n'ayant pas de contraintes particulières -- si ce n'est respecter 
+le format DOT -- il n'est pas obligatoire que celui-ci ai des canaux en commun avec 
+les autres automates du projet.
+\\\\
+C'est pourquoi, le logiciel va se charger de scanner les canaux utilisés dans l'automate 
+et dans le projet pour notifier l'utilisateur dans 2 cas particuliers.
+
+\subsubsection*{Canaux non déclarés}
+
+Dans le cas où l'automate en entrée utiliserait des canaux qui ne sont pas déclarés
+dans le projet UPPAAL, le logiciel demandera à l'utilisateur s'il veux les importer.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{ressources/gui/channels.png}
+  \caption{Ajout de canaux}
+\end{figure}
+
+La liste des canaux permet de décider au cas par cas quel canaux il faut importer ou pas.
+
+\subsubsection*{Aucun canaux en commun}
+Le but de ce logiciel étant de composer les automates entre eux, lorsque l'automate en 
+entrée n'a aucun canal en commun avec ceux dans le projet un message d'alerte apparaît.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{ressources/gui/missing.png}
+  \caption{Aucun lien entre les automates}
+\end{figure}
+
+Ceci permet à l'utilisateur d'annuler l'export pour changer son automate et utiliser 
+des canaux déjà existants avant de le ré-exporter.
+
+\subsection{Messages d'information}
+\subsubsection*{Automate en double}
+L'automate à insérer ne doit pas porter le même nom que ceux déjà dans le projet donc
+une fenêtre notifie l'utilisateur si c'est le cas.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{ressources/gui/exists.png}
+  \caption{Automate en double}
+\end{figure}
+
+\subsubsection*{Fin de l'export}
+L'export d'un automate est très rapide mais le logiciel notifie quand même 
+l'utilisateur quand celui-ci est terminé. 
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{ressources/gui/success.png}
+  \caption{Export réussi}
+\end{figure}
+
+Le message rappelle quel projet UPPAAL a été modifié pendant l'opération mais 
+aussi le nom de l'automate qui a été ajouté.
+
+\subsection{Choix techniques}
+\subsubsection*{Technologie}
+Nous avons décidé d'utiliser la technologie JAVA pour développer notre 
+solution car il s'agit celle qui a été utilisé par les développeurs du projet UPPAAL.
+\\\\
+Celui-ci n'est pas open source mais s'il le devient ce sera alors plus facile d'intégrer
+notre solution d'import directement en interne.
+
+\subsubsection*{Aspect mis de coté}
+Afin de nous concentrer sur la conversion du graphe et l'importation dans le projet UPPAAL,
+le logiciel ne prend pas en compte la disposition graphique des éléments de l'automate.
+\\\\
+Il se contente alors de les afficher en ligne afin de pouvoir les identifier facilement mais 
+l'utilisateur devra les réorganiser lui-même sachant que UPPAAL n'intègre pas de fonctions de 
+réorganisation automatique
+
+\subsubsection*{Extensibilité}
+L'architecture interne du programme a été pensée pour être la plus modulaire possible. 
+Ce qui signifie que l'on peut facilement importer et/ou exporter dans un autre format
+sans changer ce qui existe déjà. En effet, le programme possède une représentation interne
+de l'automate sous forme de graphe ce qui rend ce genres d'ajustements plus simple. 
+\\\\
+Nous avons mis à disposition une interface graphique mais nous l'avons conçue dans l'optique 
+de la découplée le plus possible du moteur de l'application. Il serait alors aisé de la supprimer
+ou de la remplacer puisqu'elle suit le patron de conception MVC. 
 
 \end{document}
