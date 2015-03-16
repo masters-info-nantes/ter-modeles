@@ -3,8 +3,8 @@
    <declaration>//Insert declarations of global clocks, variables, constants and channels.
 
 
-chan  getPart, finishPart;
-chan getHam, putHam ;
+chan getPart, finishPart;
+chan getHam, putHam;
 chan getMal, putMal;
 
 //
@@ -156,12 +156,12 @@ chan getMal, putMal;
         <transition>
             <source ref="a"/>
             <target ref="b"/>
-            <label kind="synchronisation">vendredi?13</label>
+            <label kind="synchronisation">value?13</label>
         </transition>
         <transition>
             <source ref="b"/>
             <target ref="c"/>
-            <label kind="synchronisation">vendredi?13</label>
+            <label kind="synchronisation">value?13</label>
         </transition>
         <transition>
             <source ref="b"/>
@@ -178,7 +178,7 @@ chan getMal, putMal;
         <transition>
             <source ref="a"/>
             <target ref="d"/>
-            <label kind="synchronisation">superman</label>
+            <label kind="synchronisation">iter?90</label>
         </transition>
     </template>
     <template>
