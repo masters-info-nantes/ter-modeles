@@ -13,7 +13,7 @@ chan getMal,putMal;
 // Un Jobber demande un Mallet/Hammer l'utilise, le libere
 //   Les jobbers se synchronisent donc sur get, put de Hammer ou Mallet
 //  Le systeme ici, est une composition parallele de Jobber1, Jobber2, Part (indefiniment), un Mallet et un Hammer
-//</declaration>
+	chan jambon;</declaration>
 	
    <template>
       <name x="5" y="5">Hammer</name>
@@ -231,7 +231,7 @@ chan getMal,putMal;
         </transition>
     </template>
     <template>
-        <name x="0">toto</name>
+        <name x="0">truc</name>
         <declaration/>
         <location id="a" x="0" y="0">
             <name>a</name>

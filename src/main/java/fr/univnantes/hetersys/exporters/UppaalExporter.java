@@ -250,7 +250,26 @@ public class UppaalExporter implements Exporter
 	 */
 	public void addChannel(String channel){
 		this.channels.add(channel);
-		// TODO write in project file
+		String chan = "chan "+channel+";";
+		
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath xpath = xPathfactory.newXPath();
+		Element declaration = null;
+		
+		try {
+			declaration = (Element) xpath.compile("nta/declaration").evaluate(this.document, XPathConstants.NODE);
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		declaration.appendChild(document.createTextNode(chan));
+		writeInFile();
+
+				
+				
+		//Write the new chan in the file at the position nta/declarationa
+		//writeInFile();
 	}
 	/**
 	 * All changed are made in the loaded document structure
@@ -270,7 +289,6 @@ public class UppaalExporter implements Exporter
 		catch (TransformerFactoryConfigurationError | TransformerException e) {
 			System.err.println("Cannot write generated XML to " + this.uppaalProject.getAbsolutePath());
 		}
-		loadChannels();
 	}
 	/*--------------------------------- Generate parts of automata --------------------------------*/
 	/**
