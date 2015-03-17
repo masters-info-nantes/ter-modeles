@@ -217,29 +217,32 @@ public class UppaalExporter implements Exporter
 	 * Loads all channels contained in the uppaal project
 	 */
 	private void loadChannels(){
-		channels.addAll(Arrays.asList("Riri", "Fifi", "Loulou"));
-		// TODO load channels from project file
-		Pattern pattern = Pattern.compile("chan (?:(\\w+)(?:, )?)?(\\w+);");
+		
+		Pattern pattern = Pattern.compile("chan\\s+(?:(\\w+)\\s*,\\s*)*(\\w+)\\s*;");
 		XPathFactory xPathfactory = XPathFactory.newInstance();
 		XPath xpath = xPathfactory.newXPath();
+		
 		try {
 			XPathExpression expr = xpath.compile("nta/declaration");
 			String string = (String) expr.evaluate(this.document, XPathConstants.STRING);
 			Matcher matcher = pattern.matcher(string);
-			//System.out.println(matcher.groupCount());
-			//L'expression ne gere que dans le cas de 	
-			while(matcher.find()){	
-				channels.add(matcher.group(1));
-				channels.add(matcher.group(2));
-				System.out.println(matcher.group(1));
-				System.out.println(matcher.group(2));
+			
+			while(matcher.find()){		
+				// Remove begin and end to keep channnels
+				String cleaned = matcher.group().
+								 replaceFirst("chan\\s+", "").
+								 replaceFirst("\\s*;", "")
+				;
+				
+				// Split on comma and take care of spaces
+				String[] splitChans = cleaned.split("\\s*,\\s*");
+				channels.addAll(Arrays.asList(splitChans));
 			}
 
 		} catch (XPathExpressionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 	/**
 	 * Adds the given channel to the uppaal project

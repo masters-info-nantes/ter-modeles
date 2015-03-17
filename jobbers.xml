@@ -3,9 +3,9 @@
    <declaration>//Insert declarations of global clocks, variables, constants and channels.
 
 
-chan getPart, finishPart;
-chan getHam, putHam;
-chan getMal, putMal;
+chan getPart ,value ;
+chan getHam, putHam  , mio;
+chan getMal,putMal;
 
 //
 // Ici on modelise un systeme avec des processus : Hammer (marteau), Mallet (Maillet), Jobber (ouvrier), Part (pièce à usiner)
