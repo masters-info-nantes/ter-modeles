@@ -218,7 +218,7 @@ public class UppaalExporter implements Exporter
 	 */
 	private void loadChannels(){
 		
-		Pattern pattern = Pattern.compile("chan\\s+(?:(\\w+)\\s*,\\s*)*(\\w+)\\s*;");
+		Pattern pattern = Pattern.compile("chan\\s+(?:\\w+\\s*,\\s*)*\\w+\\s*;");
 		XPathFactory xPathfactory = XPathFactory.newInstance();
 		XPath xpath = xPathfactory.newXPath();
 		
