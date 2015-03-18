@@ -6,7 +6,8 @@ import java.text.ParseException;
 import fr.univnantes.hetersys.graph.Node;
 
 public abstract class Importer {
-	
+
+	public static final String fileExtension = ".dot";
 	protected Node graph;
 	
 	public Importer(){

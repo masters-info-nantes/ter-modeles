@@ -187,7 +187,7 @@ public class DotImporter extends Importer
 		String[] parts = label.replaceAll("\"", "").split("\\?|!", 2);
 		
 		return parts;
-	}
+	}	
 }
 
 

@@ -6,6 +6,10 @@ import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import fr.univnantes.hetersys.exporters.Exporter;
+import fr.univnantes.hetersys.importers.Importer;
 
 public class Controller implements ActionListener {
 	private Gui window;
@@ -57,23 +61,41 @@ public class Controller implements ActionListener {
 	 */
 	private void browseAction(JButton button){
 		JFileChooser fileChooser = new JFileChooser();
-		
-		// TODO Add filter on file extensions
-		
-		int fileSelected = fileChooser.showOpenDialog(null);
-		if(fileSelected != JFileChooser.APPROVE_OPTION){
-			return;
-		}
-		
-		File selectedFile = fileChooser.getSelectedFile();
+
 		switch(button.getToolTipText()){
-			case "Dot file":
+			case "Dot file": { // avoid duplicate variables..
+				fileChooser.setFileFilter(new FileNameExtensionFilter(
+						"Automata (" + Importer.fileExtension + ")", 
+						Importer.fileExtension
+				));
+				
+				int fileSelected = fileChooser.showOpenDialog(null);
+				if(fileSelected != JFileChooser.APPROVE_OPTION){
+					return;
+				}
+				
+				File selectedFile = fileChooser.getSelectedFile();				
+				
 				this.window.updateDotPath(selectedFile.getAbsolutePath());
+			}
 			break;
 			
-			case "Uppaal file":
+			case "Uppaal file": {
+				fileChooser.setFileFilter(new FileNameExtensionFilter(
+						"Project (" + Exporter.fileExtension + ")",
+						Exporter.fileExtension
+				));
+				
+				int fileSelected = fileChooser.showOpenDialog(null);
+				if(fileSelected != JFileChooser.APPROVE_OPTION){
+					return;
+				}
+				
+				File selectedFile = fileChooser.getSelectedFile();				
+				
 				this.window.updateUppaalPath(selectedFile.getAbsolutePath());
 				this.window.changeAutomataListButtonState(false);
+			}
 			break;			
 		}	
 	}

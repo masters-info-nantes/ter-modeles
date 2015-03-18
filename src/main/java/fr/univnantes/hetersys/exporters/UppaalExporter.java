@@ -35,6 +35,7 @@ import org.xml.sax.SAXException;
 import fr.univnantes.hetersys.graph.Arc;
 import fr.univnantes.hetersys.graph.Node;
 import fr.univnantes.hetersys.importers.DotImporter;
+import fr.univnantes.hetersys.importers.Importer;
 public class UppaalExporter implements Exporter
 {
 	private Document document;
@@ -79,6 +80,8 @@ public class UppaalExporter implements Exporter
 	private Node graph;
 	public UppaalExporter(String automataName, Node graph)
 	{
+		super();
+		
 		this.automataName = automataName;
 		this.graph = graph;
 		this.channels = new HashSet<String>();
@@ -87,7 +90,7 @@ public class UppaalExporter implements Exporter
 		this.channelLink = false;
 		this.channelsInAutomata = false;
 		this.uppaalProject = null;
-		this.document = null;
+		this.document = null;		
 	}
 	@Override
 	public void loadExistingFile(File file) {
@@ -142,10 +145,7 @@ public class UppaalExporter implements Exporter
 				);
 	}
 	/*------------------------------------- Questions to user -------------------------------------*/
-	/**
-	 * Returns all channels found in the automata
-	 * @return Channels from automata
-	 */
+	@Override
 	public Set<String> checkChannelsExistence(){
 		return this.checkChannelsExistence(this.graph, new ArrayList<Node>());
 	}
@@ -176,20 +176,13 @@ public class UppaalExporter implements Exporter
 		}
 		return channelsToAdd;
 	}
-	/**
-	 * Check if the automata has common at least one common
-	 * channel with thoses in the uppaal project
-	 * @return true if at least one common channel, false otherwise
-	 */
+
+	@Override
 	public boolean checkAutomataHasChannelLink(){
 		return this.channelsInAutomata && this.channelLink;
 	}
-	/**
-	 * Two automata can't have the same name, this method checks
-	 * if one automata from the uppaal project has the name
-	 * given by the user
-	 * @return true if another automata has the same name, false otherwise
-	 */
+
+	@Override
 	public boolean checkAutomataAllreadyExists(){
 		Element root = this.document.getDocumentElement();
 		NodeList rootChildren = root.getChildNodes();
@@ -251,10 +244,8 @@ public class UppaalExporter implements Exporter
 			e.printStackTrace();
 		}
 	}
-	/**
-	 * Adds the given channel to the uppaal project
-	 * @param channel Channel name to insert
-	 */
+
+	@Override
 	public void addChannel(String channel){
 		this.channels.add(channel);
 		String chan = "chan "+channel+";\n";
@@ -418,12 +409,8 @@ public class UppaalExporter implements Exporter
 		Element decl = this.document.createElement("declaration");
 		parentElt.appendChild(decl);
 	}
-	
-	/**
-	 * Returns the name of all automata found in
-	 * the uppaal project
-	 * @return All automata names
-	 */
+
+	@Override
 	public String[] getAutomataList() {		
 		return this.projectAutomataNames.toArray(new String[0]);
 	}

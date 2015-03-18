@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Observable;
 import java.util.Set;
 
+import fr.univnantes.hetersys.exporters.Exporter;
 import fr.univnantes.hetersys.exporters.UppaalExporter;
 import fr.univnantes.hetersys.importers.DotImporter;
 import fr.univnantes.hetersys.importers.Importer;
@@ -23,7 +24,7 @@ public class Model extends Observable {
 	private String automataName;
 	
 	private Importer importer;
-	private UppaalExporter exporter;
+	private Exporter exporter;
 	
 	/**
 	 * Channels in automata and not in the uppaal project
