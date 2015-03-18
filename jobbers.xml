@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <nta>
-   <declaration>//Insert declarations of global clocks, variables, constants and channels.
+	<declaration>//Insert declarations of global clocks, variables, constants and channels.
 
-
-chan getPart ,value ;
-chan getHam, putHam  , mio;
+chan getHam, putHam;
 chan getMal,putMal;
+chan getPart;
+chan finishPart;
+
 
 //
 // Ici on modelise un systeme avec des processus : Hammer (marteau), Mallet (Maillet), Jobber (ouvrier), Part (pièce à usiner)
@@ -13,131 +14,117 @@ chan getMal,putMal;
 // Un Jobber demande un Mallet/Hammer l'utilise, le libere
 //   Les jobbers se synchronisent donc sur get, put de Hammer ou Mallet
 //  Le systeme ici, est une composition parallele de Jobber1, Jobber2, Part (indefiniment), un Mallet et un Hammer
-	chan jambon;</declaration>
-	
-   <template>
-      <name x="5" y="5">Hammer</name>
-      <declaration>//Insert local declarations of clocks, variables and constants.</declaration>
-      <location id="id0" x="248" y="136"/>
-      <location id="id1" x="424" y="136"/>
-      <init ref="id0"/>
-      <transition>
-         <source ref="id0"/>
-         <target ref="id1"/>
-         <label kind="synchronisation" x="288" y="96">getHam?</label>
-         <nail x="344" y="88"/>
-      </transition>
-      <transition>
-         <source ref="id1"/>
-         <target ref="id0"/>
-         <label kind="synchronisation" x="328" y="152">putHam?</label>
-         <nail x="344" y="176"/>
-      </transition>
-   </template>
-
-   <template>
-      <name x="5" y="5">Mallet</name>
-      <location id="id2" x="192" y="200"/>
-      <location id="id3" x="360" y="200"/>
-      <init ref="id2"/>
-      <transition>
-         <source ref="id2"/>
-         <target ref="id3"/>
-         <label kind="synchronisation" x="208" y="160">getMal?</label>
-         <nail x="272" y="144"/>
-      </transition>
-      <transition>
-         <source ref="id3"/>
-         <target ref="id2"/>
-         <label kind="synchronisation" x="288" y="232">putMal?</label>
-         <nail x="272" y="248"/>
-      </transition>
-   </template>
-
-   <template>
-      <name x="5" y="5">Jobber</name>
-      <location id="id4" x="64" y="104"/>
-      <location id="id5" x="184" y="112"/>
-      <location id="id6" x="328" y="112"/>
-      <location id="id7" x="456" y="112"/>
-      <location id="id8" x="632" y="112"/>
-      <init ref="id4"/>
-      <transition>
-         <source ref="id4"/>
-         <target ref="id5"/>
-         <label kind="synchronisation" x="64" y="93">getPart!</label>
-         <nail x="112" y="112"/>
-         <nail x="136" y="112"/>
-         <nail x="136" y="112"/>
-      </transition>
-      <transition>
-         <source ref="id5"/>
-         <target ref="id6"/>
-         <label kind="synchronisation" x="224" y="120">getHam!</label>
-         <nail x="248" y="80"/>
-         <nail x="272" y="88"/>
-         <nail x="280" y="80"/>
-      </transition>
-      <transition>
-         <source ref="id5"/>
-         <target ref="id6"/>
-         <label kind="synchronisation" x="192" y="72">getMal!</label>
-         <nail x="248" y="144"/>
-         <nail x="288" y="144"/>
-         <nail x="280" y="128"/>
-      </transition>
-      <transition>
-         <source ref="id6"/>
-         <target ref="id7"/>
-      </transition>
-      <transition>
-         <source ref="id7"/>
-         <target ref="id8"/>
-         <label kind="synchronisation" x="484" y="97">finishPart!</label>
-      </transition>
-      <transition>
-         <source ref="id8"/>
-         <target ref="id4"/>
-         <label kind="synchronisation" x="464" y="144">putMal!</label>
-         <nail x="448" y="32"/>
-         <nail x="248" y="32"/>
-      </transition>
-      <transition>
-         <source ref="id8"/>
-         <target ref="id4"/>
-         <label kind="synchronisation" x="320" y="32">putHam!</label>
-         <nail x="440" y="192"/>
-         <nail x="240" y="192"/>
-      </transition>
-   </template>
-
-   <template>
-      <name x="5" y="5">Part</name>
-      <location id="id9" x="152" y="112"/>
-      <location id="id10" x="312" y="112"/>
-      <init ref="id9"/>
-      <transition>
-         <source ref="id9"/>
-         <target ref="id10"/>
-         <label kind="synchronisation" x="176" y="120">getPart?</label>
-         <nail x="192" y="128"/>
-         <nail x="192" y="128"/>
-         <nail x="304" y="168"/>
-      </transition>
-      <transition>
-         <source ref="id10"/>
-         <target ref="id9"/>
-         <label kind="synchronisation" x="232" y="80">finishPart?</label>
-         <nail x="264" y="96"/>
-         <nail x="168" y="56"/>
-      </transition>
-   </template>
-    <template>
+chan tutu;
+chan toto;
+</declaration>
+	<template>
+		<name x="5" y="5">Hammer</name>
+		<declaration>//Insert local declarations of clocks, variables and constants.</declaration>
+		<location id="id0" x="248" y="136">
+		</location>
+		<location id="id1" x="424" y="136">
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="288" y="96">getHam?</label>
+			<nail x="344" y="88"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="328" y="152">putHam?</label>
+			<nail x="344" y="176"/>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">Mallet</name>
+		<location id="id2" x="192" y="200">
+		</location>
+		<location id="id3" x="360" y="200">
+		</location>
+		<init ref="id2"/>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="208" y="160">getMal?</label>
+			<nail x="272" y="144"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="288" y="232">putMal?</label>
+			<nail x="272" y="248"/>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">Jobber</name>
+		<location id="id4" x="64" y="104">
+		</location>
+		<location id="id5" x="184" y="112">
+		</location>
+		<location id="id6" x="328" y="112">
+		</location>
+		<location id="id7" x="456" y="112">
+		</location>
+		<location id="id8" x="632" y="112">
+		</location>
+		<init ref="id4"/>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="64" y="93">getPart!</label>
+			<nail x="112" y="112"/>
+			<nail x="136" y="112"/>
+			<nail x="136" y="112"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="224" y="120">getHam!</label>
+			<nail x="248" y="80"/>
+			<nail x="272" y="88"/>
+			<nail x="280" y="80"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="192" y="72">getMal!</label>
+			<nail x="248" y="144"/>
+			<nail x="288" y="144"/>
+			<nail x="280" y="128"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id7"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="484" y="97">finishPart!</label>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="464" y="144">putMal!</label>
+			<nail x="448" y="32"/>
+			<nail x="248" y="32"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="320" y="32">putHam!</label>
+			<nail x="440" y="192"/>
+			<nail x="240" y="192"/>
+		</transition>
+	</template>
+	<template>
         <name x="0">test</name>
-        <declaration/>
         <location id="a" x="0" y="0">
             <name>a</name>
         </location>
+        <init ref="a"/>
         <location id="b" x="70" y="70">
             <name>b</name>
         </location>
@@ -153,15 +140,16 @@ chan getMal,putMal;
         <location id="e" x="210" y="210">
             <name>e</name>
         </location>
+        <init ref="e"/>
         <transition>
             <source ref="a"/>
             <target ref="b"/>
-            <label kind="synchronisation">value?13</label>
+            <label kind="synchronisation">toto?</label>
         </transition>
         <transition>
             <source ref="b"/>
             <target ref="c"/>
-            <label kind="synchronisation">value?13</label>
+            <label kind="synchronisation">toto?</label>
         </transition>
         <transition>
             <source ref="b"/>
@@ -178,105 +166,7 @@ chan getMal,putMal;
         <transition>
             <source ref="a"/>
             <target ref="d"/>
-            <label kind="synchronisation">iter?90</label>
-        </transition>
-    </template>
-    <template>
-        <name x="0">New Automata</name>
-        <declaration/>
-        <location id="a" x="0" y="0">
-            <name>a</name>
-        </location>
-        <location id="b" x="70" y="70">
-            <name>b</name>
-        </location>
-        <location id="c" x="140" y="140">
-            <name>c</name>
-        </location>
-        <location id="d" x="140" y="140">
-            <name>d</name>
-        </location>
-        <location id="j" x="210" y="210">
-            <name>j</name>
-        </location>
-        <location id="e" x="210" y="210">
-            <name>e</name>
-        </location>
-        <transition>
-            <source ref="a"/>
-            <target ref="b"/>
-            <label kind="synchronisation">value?13</label>
-        </transition>
-        <transition>
-            <source ref="b"/>
-            <target ref="c"/>
-            <label kind="synchronisation">value?13</label>
-        </transition>
-        <transition>
-            <source ref="b"/>
-            <target ref="d"/>
-        </transition>
-        <transition>
-            <source ref="d"/>
-            <target ref="j"/>
-        </transition>
-        <transition>
-            <source ref="e"/>
-            <target ref="d"/>
-        </transition>
-        <transition>
-            <source ref="a"/>
-            <target ref="d"/>
-            <label kind="synchronisation">iter?90</label>
-        </transition>
-    </template>
-    <template>
-        <name x="0">truc</name>
-        <declaration/>
-        <location id="a" x="0" y="0">
-            <name>a</name>
-        </location>
-        <location id="b" x="70" y="70">
-            <name>b</name>
-        </location>
-        <location id="c" x="140" y="140">
-            <name>c</name>
-        </location>
-        <location id="d" x="140" y="140">
-            <name>d</name>
-        </location>
-        <location id="j" x="210" y="210">
-            <name>j</name>
-        </location>
-        <location id="e" x="210" y="210">
-            <name>e</name>
-        </location>
-        <transition>
-            <source ref="a"/>
-            <target ref="b"/>
-            <label kind="synchronisation">value?13</label>
-        </transition>
-        <transition>
-            <source ref="b"/>
-            <target ref="c"/>
-            <label kind="synchronisation">value?13</label>
-        </transition>
-        <transition>
-            <source ref="b"/>
-            <target ref="d"/>
-        </transition>
-        <transition>
-            <source ref="d"/>
-            <target ref="j"/>
-        </transition>
-        <transition>
-            <source ref="e"/>
-            <target ref="d"/>
-        </transition>
-        <transition>
-            <source ref="a"/>
-            <target ref="d"/>
-            <label kind="synchronisation">iter?90</label>
+            <label kind="synchronisation">tutu?</label>
         </transition>
     </template>
     <system>//Insert process assignments.
@@ -285,7 +175,8 @@ Hammer1 := Hammer();
 Mallet1 := Mallet();
 Jobber1 := Jobber();
 Jobber2 := Jobber();
-Part1 := Part();
 //Edit system definition.
 system Hammer1, Mallet1, Jobber1, Jobber2, Part1;</system>
+	<queries>
+	</queries>
 </nta>

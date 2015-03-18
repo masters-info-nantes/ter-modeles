@@ -1,7 +1,7 @@
  digraph mon_graphe {
-	a -> b -> c[label=value?13];
+	a -> b -> c[label="toto?"];
 	b -> d;
-	a->d[label=iter?90];
+	a->d[label="tutu?"];
 	e->d;
 	d-> j;
  }

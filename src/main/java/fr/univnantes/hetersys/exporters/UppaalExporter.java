@@ -338,6 +338,11 @@ public class UppaalExporter implements Exporter
 		nameElt.appendChild(this.document.createTextNode(node.getName()));
 		nodeElt.appendChild(nameElt);
 		parentElt.appendChild(nodeElt);
+		/*if(node.getInputArcs().isEmpty()){
+			Element initElt = this.document.createElement("init");
+			initElt.setAttribute("ref", node.getName());
+			parentElt.appendChild(initElt);
+		}*/
 		List<Arc> allArcs = new ArrayList<Arc>();
 		allArcs.addAll(node.getOutputArcs());
 		allArcs.addAll(node.getInputArcs());
@@ -399,4 +404,5 @@ public class UppaalExporter implements Exporter
 		Element decl = this.document.createElement("declaration");
 		parentElt.appendChild(decl);
 	}
+	
 }
