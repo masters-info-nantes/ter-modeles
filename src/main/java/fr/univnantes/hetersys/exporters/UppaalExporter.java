@@ -250,7 +250,7 @@ public class UppaalExporter implements Exporter
 	 */
 	public void addChannel(String channel){
 		this.channels.add(channel);
-		String chan = "chan "+channel+";";
+		String chan = "chan "+channel+";\n";
 		
 		XPathFactory xPathfactory = XPathFactory.newInstance();
 		XPath xpath = xPathfactory.newXPath();
