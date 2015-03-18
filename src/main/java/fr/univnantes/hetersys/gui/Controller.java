@@ -8,11 +8,11 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 public class Controller implements ActionListener {
-	private Gui fenetre;
+	private Gui window;
 	private Model model;
 	
-	public void setGui(Gui fenetre){
-		this.fenetre = fenetre;
+	public void setGui(Gui window){
+		this.window = window;
 	}
 
 	@Override
@@ -20,31 +20,32 @@ public class Controller implements ActionListener {
 		JButton buttonSource = (JButton) e.getSource();
 		
 		switch(buttonSource.getText()){
-			case "Show list":
-				fenetre.displayAutomataList();
+			case Gui.LIST_AUTOMATA_BUTTON_TEXT:
+				window.displayAutomataList(model.getAutomataList());
 			break;
 			
-			case "Integrate":
-				String dotFile = this.fenetre.getDotFilePath(),
-					   uppaalFile = this.fenetre.getUppaalFilePath(),
-					   automataName = this.fenetre.getAutomataName();
+			case Gui.EXPORT_BUTTON_TEXT:
+				String dotFile = this.window.getDotFilePath(),
+					   uppaalFile = this.window.getUppaalFilePath(),
+					   automataName = this.window.getAutomataName();
 				
 				// Check all required data are available
 				if(Gui.NO_FILE_SELECTED.equals(dotFile) || 
 						Gui.NO_FILE_SELECTED.equals(uppaalFile) ||
 						"".equals(automataName))
 				{
-					this.fenetre.afficherInfo("Dot file, uppaal project and automata name must be completed");
+					this.window.displayInfo("Dot file, uppaal project and automata name must be completed");
 					return;
 				}
 				
 				this.model = new Model(dotFile, uppaalFile, automataName);
-				this.model.addObserver(this.fenetre);
+				this.model.addObserver(this.window);
 				this.model.runFromBeginning();
+				this.window.changeAutomataListButtonState(true);
 				
 			break;
 			
-			case "Browse..":
+			case Gui.BROWSE_BUTTON_TEXT:
 				this.browseAction(buttonSource);
 			break;
 		}
@@ -57,6 +58,8 @@ public class Controller implements ActionListener {
 	private void browseAction(JButton button){
 		JFileChooser fileChooser = new JFileChooser();
 		
+		// TODO Add filter on file extensions
+		
 		int fileSelected = fileChooser.showOpenDialog(null);
 		if(fileSelected != JFileChooser.APPROVE_OPTION){
 			return;
@@ -65,11 +68,12 @@ public class Controller implements ActionListener {
 		File selectedFile = fileChooser.getSelectedFile();
 		switch(button.getToolTipText()){
 			case "Dot file":
-				this.fenetre.updateDotPath(selectedFile.getAbsolutePath());
+				this.window.updateDotPath(selectedFile.getAbsolutePath());
 			break;
 			
 			case "Uppaal file":
-				this.fenetre.updateUppaalPath(selectedFile.getAbsolutePath());
+				this.window.updateUppaalPath(selectedFile.getAbsolutePath());
+				this.window.changeAutomataListButtonState(false);
 			break;			
 		}	
 	}

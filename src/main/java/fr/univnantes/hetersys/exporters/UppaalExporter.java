@@ -47,6 +47,11 @@ public class UppaalExporter implements Exporter
 	 * @see loadChannels
 	 */
 	private Set<String> channels;
+	
+	/**
+	 * Name of automata found in uppaal project
+	 */
+	private Set<String> projectAutomataNames;
 	/**
 	 * Fill if an automata with the same name has been
 	 * found in the uppaal project
@@ -77,6 +82,7 @@ public class UppaalExporter implements Exporter
 		this.automataName = automataName;
 		this.graph = graph;
 		this.channels = new HashSet<String>();
+		this.projectAutomataNames = new HashSet<String>();
 		this.existingTemplate = null;
 		this.channelLink = false;
 		this.channelsInAutomata = false;
@@ -201,6 +207,7 @@ public class UppaalExporter implements Exporter
 					// The "location" subelement has also a "name" sub element, so check
 					Element current = (Element) templateChildren.item(j);
 					if(current.getParentNode().getNodeName().equals("template")){
+						this.projectAutomataNames.add(current.getTextContent());
 						// The template allready exists and has been found
 						if(current.getTextContent().equals(this.automataName)){
 							this.existingTemplate = currentTemplate;
@@ -265,11 +272,6 @@ public class UppaalExporter implements Exporter
 		
 		declaration.appendChild(document.createTextNode(chan));
 		writeInFile();
-
-				
-				
-		//Write the new chan in the file at the position nta/declarationa
-		//writeInFile();
 	}
 	/**
 	 * All changed are made in the loaded document structure
@@ -417,4 +419,12 @@ public class UppaalExporter implements Exporter
 		parentElt.appendChild(decl);
 	}
 	
+	/**
+	 * Returns the name of all automata found in
+	 * the uppaal project
+	 * @return All automata names
+	 */
+	public String[] getAutomataList() {		
+		return this.projectAutomataNames.toArray(new String[0]);
+	}
 }

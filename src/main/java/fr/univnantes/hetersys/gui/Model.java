@@ -168,4 +168,8 @@ public class Model extends Observable {
 	public String getLastMessage(){
 		return this.lastMessage;
 	}
+
+	public String[] getAutomataList() {
+		return this.exporter.getAutomataList(); 
+	}
 }

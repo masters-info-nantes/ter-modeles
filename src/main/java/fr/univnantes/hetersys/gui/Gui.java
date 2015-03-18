@@ -23,6 +23,13 @@ public class Gui extends JFrame implements Observer {
 
 	public final static String NO_FILE_SELECTED = "No file selected";
 	
+	public final static String EXPORT_BUTTON_TEXT = "Integrate";
+	public final static String BROWSE_BUTTON_TEXT = "Browse..";
+	public final static String LIST_AUTOMATA_BUTTON_TEXT = "Show list";
+	
+	
+	private JButton buttonAutomataList;
+	
 	private JTextField textDotPath;
 	private JTextField textUppaalPath;
 	private JTextField textAutomataName;
@@ -32,8 +39,6 @@ public class Gui extends JFrame implements Observer {
 	
 	public Gui(Controller controller){
 		super("Hetersys");
-		
-		this.dialogAutomata = new AutomataListDialog(this);
 		
 		// Interface
 		JPanel panelRoot = new JPanel();
@@ -52,11 +57,11 @@ public class Gui extends JFrame implements Observer {
 		this.textUppaalPath = new JTextField(/*Gui.NO_FILE_SELECTED*/"jobbers.xml");
 		this.textUppaalPath.setEditable(false);
 		
-		JButton buttonBrowseDot = new JButton("Browse..");
+		JButton buttonBrowseDot = new JButton(Gui.BROWSE_BUTTON_TEXT);
 		buttonBrowseDot.setToolTipText("Dot file");
 		buttonBrowseDot.addActionListener(controller);
 		
-		JButton buttonBrowseUppaal = new JButton("Browse..");
+		JButton buttonBrowseUppaal = new JButton(Gui.BROWSE_BUTTON_TEXT);
 		buttonBrowseUppaal.setToolTipText("Uppaal file");
 		buttonBrowseUppaal.addActionListener(controller);
 		
@@ -75,7 +80,8 @@ public class Gui extends JFrame implements Observer {
 		panelAutomata.setBorder(BorderFactory.createTitledBorder("Automata"));
 		
 		textAutomataName = new JTextField(/*""*/"test");
-		JButton buttonAutomataList = new JButton("Show list");
+		buttonAutomataList = new JButton(Gui.LIST_AUTOMATA_BUTTON_TEXT);
+		buttonAutomataList.setEnabled(false);
 		buttonAutomataList.addActionListener(controller);
 		
 		panelAutomata.add(new JLabel("Automata name: "));
@@ -90,7 +96,7 @@ public class Gui extends JFrame implements Observer {
 		panelExport.setLayout(new BorderLayout());
 		panelExport.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		
-		JButton buttonExport = new JButton("Integrate");
+		JButton buttonExport = new JButton(Gui.EXPORT_BUTTON_TEXT);
 		buttonExport.addActionListener(controller);
 		
 		panelExport.add(buttonExport, BorderLayout.EAST);
@@ -123,7 +129,8 @@ public class Gui extends JFrame implements Observer {
 	}
 	
 	/*---------------------- Controller setters ---------------------------*/
-	public void displayAutomataList(){
+	public void displayAutomataList(String[] automataName){
+		this.dialogAutomata = new AutomataListDialog(this, automataName);		
 		dialogAutomata.display();		
 	}
 	
@@ -135,8 +142,12 @@ public class Gui extends JFrame implements Observer {
 		this.textUppaalPath.setText(path);
 	}	
 
-	public void afficherInfo(String content){
+	public void displayInfo(String content){
 		JOptionPane.showMessageDialog(this, content);
+	}
+	
+	public void changeAutomataListButtonState(boolean enabled){
+		this.buttonAutomataList.setEnabled(enabled);
 	}
 	
 	/*---------------------- Models notify ---------------------------*/	

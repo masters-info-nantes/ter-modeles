@@ -24,7 +24,7 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class AutomataListDialog extends JDialog {
 	
-	public AutomataListDialog(JFrame parent){
+	public AutomataListDialog(JFrame parent, String[] automataNames){
 		super(parent, "Existing automata", true);
 		
 		// Interface
@@ -34,8 +34,7 @@ public class AutomataListDialog extends JDialog {
 		setContentPane(panelRoot);
 		
 		// List of automata names
-		String[] data = { "Riri", "Fifi", "Loulou" };
-		JList listAutomata = new JList<String>(data);		
+		JList listAutomata = new JList<String>(automataNames);		
 		listAutomata.setEnabled(false);
 		
 		JLabel labelWarning = new JLabel("<html>List of automata contained in the Uppaal project.\nYour automata can't have a name like one of them.</html>");
