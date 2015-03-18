@@ -129,6 +129,16 @@ public class Model extends Observable {
 		this.run();
 	}
 	
+
+	/**
+	 * Run the main method from the beginning
+	 * @warning Whatever the current step
+	 */
+	public void runFromBeginning() {
+		this.runStep = 0;
+		this.run();
+	}	
+	
 	/**
 	 * Add channels from the gui (in the automata) in
 	 * the uppaal project

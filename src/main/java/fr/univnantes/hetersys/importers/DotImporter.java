@@ -1,13 +1,13 @@
 package fr.univnantes.hetersys.importers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner; 
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.io.File;
-import java.io.FileNotFoundException;
 
 import fr.univnantes.hetersys.graph.Arc;
 import fr.univnantes.hetersys.graph.Node;
@@ -104,7 +104,7 @@ public class DotImporter extends Importer
 		{
 			label = lastParseNode[1];
 		}
-
+		
 		// In dot some short expression exists like:  
 		// a -> b -> c 
 		// Analyze each of them here
@@ -149,9 +149,10 @@ public class DotImporter extends Importer
 	private String[] parseDotNode(String node) throws ParseException
 	{		
 		// ?: = not capture the group
-		Pattern pattern = Pattern.compile("(\\w+)(?:\\[label=([^\\[]+)\\])?");
+		String labelPattern = "[^\\]]+";
+		Pattern pattern = Pattern.compile("(\\w+)(?:\\[label=(" + labelPattern + "|\"" + labelPattern + "\")\\])?");
 		Matcher matcher = pattern.matcher(node);
-		
+
 		if(!matcher.matches()){
 			throw new ParseException("Dot element not recognized: " + node, this.currentLine);
 		}
@@ -183,7 +184,7 @@ public class DotImporter extends Importer
 		// Pattern: <channel id><operator ? or !><expression>
 		
 		// If the expression contains "?" or "!" it will be not splitted
-		String[] parts = label.split("\\?|!", 2);
+		String[] parts = label.replaceAll("\"", "").split("\\?|!", 2);
 		
 		return parts;
 	}

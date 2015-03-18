@@ -90,7 +90,7 @@ public class Gui extends JFrame implements Observer {
 		panelExport.setLayout(new BorderLayout());
 		panelExport.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 		
-		JButton buttonExport = new JButton("Export");
+		JButton buttonExport = new JButton("Integrate");
 		buttonExport.addActionListener(controller);
 		
 		panelExport.add(buttonExport, BorderLayout.EAST);

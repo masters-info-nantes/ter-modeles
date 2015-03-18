@@ -40,7 +40,7 @@ public class Controller implements ActionListener {
 				
 				this.model = new Model(dotFile, uppaalFile, automataName);
 				this.model.addObserver(this.fenetre);
-				this.model.run();
+				this.model.runFromBeginning();
 				
 			break;
 			
