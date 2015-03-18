@@ -306,9 +306,26 @@ public class UppaalExporter implements Exporter
 		name.appendChild(this.document.createTextNode(this.automataName));
 		tpl.appendChild(name);
 		this.generateDeclaration(tpl);
-		this.generateNodes(tpl, graph, new ArrayList<Node>(), 0);
+		this.generateNodes(tpl, this.graph, new ArrayList<Node>(), 0);
+		this.generateEntryNode(tpl, this.graph);
 		this.generateTransitions(tpl, this.graph, new ArrayList<Node>());
 		return tpl;
+	}
+	
+	/**
+	 * Add graph entry point into uppaal project
+	 * 
+	 * <init ref="a"/>
+	 * 
+	 * @param parentElt Element which represents the automata (template element)
+	 * @param graph Graph which represents an automata
+	 */
+	private void generateEntryNode(Element parentElt, Node graph) {
+		List<Node> entryPoints = graph.getEntryPoints();
+
+		Element initElt = this.document.createElement("init");
+		initElt.setAttribute("ref", entryPoints.get(0).getName());
+		parentElt.appendChild(initElt);		
 	}
 	/**
 	 * Browse the automata graph and turn nodes into xml uppaal nodes
@@ -338,11 +355,6 @@ public class UppaalExporter implements Exporter
 		nameElt.appendChild(this.document.createTextNode(node.getName()));
 		nodeElt.appendChild(nameElt);
 		parentElt.appendChild(nodeElt);
-		/*if(node.getInputArcs().isEmpty()){
-			Element initElt = this.document.createElement("init");
-			initElt.setAttribute("ref", node.getName());
-			parentElt.appendChild(initElt);
-		}*/
 		List<Arc> allArcs = new ArrayList<Arc>();
 		allArcs.addAll(node.getOutputArcs());
 		allArcs.addAll(node.getInputArcs());

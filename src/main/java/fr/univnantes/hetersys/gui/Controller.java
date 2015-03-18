@@ -24,7 +24,7 @@ public class Controller implements ActionListener {
 				fenetre.displayAutomataList();
 			break;
 			
-			case "Export":
+			case "Integrate":
 				String dotFile = this.fenetre.getDotFilePath(),
 					   uppaalFile = this.fenetre.getUppaalFilePath(),
 					   automataName = this.fenetre.getAutomataName();

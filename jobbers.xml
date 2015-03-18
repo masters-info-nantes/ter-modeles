@@ -121,10 +121,10 @@ chan toto;
 	</template>
 	<template>
         <name x="0">test</name>
+        <declaration/>
         <location id="a" x="0" y="0">
             <name>a</name>
         </location>
-        <init ref="a"/>
         <location id="b" x="70" y="70">
             <name>b</name>
         </location>
@@ -140,16 +140,16 @@ chan toto;
         <location id="e" x="210" y="210">
             <name>e</name>
         </location>
-        <init ref="e"/>
+        <init ref="a"/>
         <transition>
             <source ref="a"/>
             <target ref="b"/>
-            <label kind="synchronisation">toto?</label>
+            <label kind="synchronisation">value</label>
         </transition>
         <transition>
             <source ref="b"/>
             <target ref="c"/>
-            <label kind="synchronisation">toto?</label>
+            <label kind="synchronisation">value</label>
         </transition>
         <transition>
             <source ref="b"/>
@@ -166,7 +166,7 @@ chan toto;
         <transition>
             <source ref="a"/>
             <target ref="d"/>
-            <label kind="synchronisation">tutu?</label>
+            <label kind="synchronisation">"iter?"</label>
         </transition>
     </template>
     <system>//Insert process assignments.
