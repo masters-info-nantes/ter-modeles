@@ -70,12 +70,16 @@ public class UppaalExporter implements Exporter
 	private boolean channelsInAutomata;
 	/**
 	 * Name of the automata to insert, it must be different
-	 * from others allready in the uppaal project
+	 * from others already in the uppaal project
 	 */
 	private String automataName;
 	/**
 	 * Graph which represents the dot automata
 	 */
+	
+	private XPathFactory xPathfactory;
+	private XPath xpath;
+	
 	private Node graph;
 	public UppaalExporter(String automataName, Node graph)
 	{
@@ -89,8 +93,11 @@ public class UppaalExporter implements Exporter
 		this.channelLink = false;
 		this.channelsInAutomata = false;
 		this.uppaalProject = null;
-		this.document = null;		
+		this.document = null;	
+		this.xPathfactory = XPathFactory.newInstance();
+		this.xpath = xPathfactory.newXPath();
 	}
+	
 	@Override
 	public void loadExistingFile(File file) {
 		this.uppaalProject = file;
@@ -105,6 +112,7 @@ public class UppaalExporter implements Exporter
 		// Load channels
 		this.loadChannels();
 	}
+	
 	@Override
 	public void updateFile() throws IOException
 	{
@@ -124,7 +132,6 @@ public class UppaalExporter implements Exporter
 		try {
 			system = (Element) xpath.compile("nta/system").evaluate(this.document, XPathConstants.NODE);
 		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -147,11 +154,13 @@ public class UppaalExporter implements Exporter
 				"\" has been updated with \"" + this.automataName + "\" automata"
 				);
 	}
+	
 	/*------------------------------------- Questions to user -------------------------------------*/
 	@Override
 	public Set<String> checkChannelsExistence(){
 		return this.checkChannelsExistence(this.graph, new ArrayList<Node>());
 	}
+	
 	private Set<String> checkChannelsExistence(Node node, List<Node> visitedNodes){
 		Set<String> channelsToAdd = new HashSet<String>();
 		for(Arc arc: node.getOutputArcs()){
@@ -187,14 +196,11 @@ public class UppaalExporter implements Exporter
 
 	@Override
 	public boolean checkAutomataAllreadyExists(){
-		XPathFactory xPathfactory = XPathFactory.newInstance();
-		XPath xpath = xPathfactory.newXPath();
 		NodeList templateNameList = null;
 		
 		try {
 			templateNameList = (NodeList) xpath.compile("nta/template/name").evaluate(this.document, XPathConstants.NODESET);
 		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -218,8 +224,6 @@ public class UppaalExporter implements Exporter
 	private void loadChannels(){
 		
 		Pattern pattern = Pattern.compile("chan\\s+(?:\\w+\\s*,\\s*)*\\w+\\s*;");
-		XPathFactory xPathfactory = XPathFactory.newInstance();
-		XPath xpath = xPathfactory.newXPath();
 		
 		try {
 			XPathExpression expr = xpath.compile("nta/declaration");
@@ -239,24 +243,21 @@ public class UppaalExporter implements Exporter
 			}
 
 		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void addChannel(String channel){
+		
 		this.channels.add(channel);
 		String chan = "chan "+channel+";\n";
 		
-		XPathFactory xPathfactory = XPathFactory.newInstance();
-		XPath xpath = xPathfactory.newXPath();
 		Element declaration = null;
 		
 		try {
 			declaration = (Element) xpath.compile("nta/declaration").evaluate(this.document, XPathConstants.NODE);
 		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
