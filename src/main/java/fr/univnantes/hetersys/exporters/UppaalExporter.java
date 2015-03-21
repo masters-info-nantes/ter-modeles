@@ -35,7 +35,6 @@ import org.xml.sax.SAXException;
 import fr.univnantes.hetersys.graph.Arc;
 import fr.univnantes.hetersys.graph.Node;
 import fr.univnantes.hetersys.importers.DotImporter;
-import fr.univnantes.hetersys.importers.Importer;
 public class UppaalExporter implements Exporter
 {
 	private Document document;
@@ -117,14 +116,18 @@ public class UppaalExporter implements Exporter
 		Element root = this.document.getDocumentElement();
 		Element template = generateTemplate(this.graph);
 		// Search system element to insert the template before
+		
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath xpath = xPathfactory.newXPath();
 		Element system = null;
-		NodeList rootChildren = root.getChildNodes();
-		for (int i = 0; i < rootChildren.getLength(); i++){
-			org.w3c.dom.Node n = rootChildren.item(i);
-			if(n.getNodeName().equals("system")){
-				system = (Element) n;
-			}
+		
+		try {
+			system = (Element) xpath.compile("nta/system").evaluate(this.document, XPathConstants.NODE);
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 		// Check project format
 		if(system == null){
 			throw new IOException("Cannot find <system> element in " + this.uppaalProject.getName());
@@ -184,32 +187,28 @@ public class UppaalExporter implements Exporter
 
 	@Override
 	public boolean checkAutomataAllreadyExists(){
-		Element root = this.document.getDocumentElement();
-		NodeList rootChildren = root.getChildNodes();
-		// "template" represents one automata which is a direct child
-		// of the root
-		// It's sub element "name" contains the name of the automata
-		for (int i = 0; i < rootChildren.getLength(); i++){
-			org.w3c.dom.Node n = rootChildren.item(i);
-			// Looking for template
-			if(n.getNodeName().equals("template")){
-				Element currentTemplate = (Element) n;
-				// Looking for name
-				NodeList templateChildren = currentTemplate.getElementsByTagName("name");
-				for(int j = 0; j < templateChildren.getLength(); j++){
-					// The "location" subelement has also a "name" sub element, so check
-					Element current = (Element) templateChildren.item(j);
-					if(current.getParentNode().getNodeName().equals("template")){
-						this.projectAutomataNames.add(current.getTextContent());
-						// The template allready exists and has been found
-						if(current.getTextContent().equals(this.automataName)){
-							this.existingTemplate = currentTemplate;
-							return true;
-						}
-					}
-				}
-			}
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath xpath = xPathfactory.newXPath();
+		NodeList templateNameList = null;
+		
+		try {
+			templateNameList = (NodeList) xpath.compile("nta/template/name").evaluate(this.document, XPathConstants.NODESET);
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+		Element currentTemplate = null;
+		for(int i = 0; i < templateNameList.getLength(); i++){
+			currentTemplate = (Element) templateNameList.item(i).getParentNode();
+			if(templateNameList.item(i).getTextContent().equals(this.automataName)){
+				this.existingTemplate = currentTemplate;
+				return true;
+			}
+			
+			this.projectAutomataNames.add(templateNameList.item(i).getTextContent());
+		}
+		
 		return false;
 	}
 	/*-------------------------------- Load and update project file -------------------------------*/	
