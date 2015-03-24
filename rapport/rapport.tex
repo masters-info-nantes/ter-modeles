@@ -33,7 +33,9 @@
 \title{Projet de recherche}
 \author{Antoine Forgerou \and Jérémy Bardon \and Nicolas Bourdin}
 \date{}
-\titleformat{\chapter}[hang]{\bf\huge}{\thechapter}{2pc}{} %Permet de masquer les affichages de "Chapitre" 
+
+% Permet de masquer les affichages de "Chapitre" 
+\titleformat{\chapter}[hang]{\bf\huge}{\thechapter}{2pc}{} 
 \begin{document}
 	\renewcommand{\contentsname}{Sommaire}
 	\maketitle	
@@ -225,8 +227,8 @@ graph monGraphe {
 \end{figure}
 
 \newpage
-\section{Hetersys : notre solution}
-\subsection{Introduction}
+\chapter[Hetersys : notre solution]{Hetersys\footnote{Heterogeneous systems: Tiré du nom du sujet de recherche "Modélisation et analyse des systèmes logiciels hétérogènes"} : notre solution}
+\section{Introduction}
 
 Notre but est de pouvoir composer n'importe quel type d'automate à l'aide du logiciel 
 UPPAAL. Celui-ci propose de créer des automates et de les rassembler sous forme de projets 
@@ -246,6 +248,70 @@ Pour la description du graphe, nous avons choisi de nous appuyer
 sur le format DOT bien connu qui est selon nous un langage très simple et minimaliste 
 qui permet de construire des graphes très rapidement.
 
+\section{Architecture logicielle}
+
+L'architecture interne du programme a été pensée pour être la plus modulaire possible 
+ce qui signifie que l'on peut facilement importer et/ou exporter dans un autre format
+sans changer ce qui existe déjà. 
+\\\\
+En effet, le programme possède une représentation interne de l'automate sous forme 
+de graphe ce qui rend ce genres d'ajustements plus simples. Les parties \emph{importer}
+et \emph{exporter} constituent donc les points d'extension de notre programme.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.6]{ressources/archi.png}
+  \caption{Composants du logiciel}
+\end{figure}
+
+Nous avons mis à disposition une interface graphique mais nous l'avons conçue dans l'optique 
+de la découplée le plus possible du moteur de l'application. Il serait alors aisé de la supprimer
+ou de la remplacer puisqu'elle suit le patron de conception MVC. 
+\\\\
+Par conséquent, la routine principale du programme ce trouve au niveau du 
+\emph{modèle} qui se charge de dérouler le programme tout en interagissant 
+avec l'interface.
+
+\section{Fonctionnement interne}
+
+La partie principale du programme est celle qui connaît et utilise l'importeur 
+et l'exporteur. Le fonctionnement ce résume donc à utiliser ces deux composants
+afin de charger l'automate et de l'ajouter dans le projet UPPAAL tout en procédant
+à certaines vérifications au préalable.
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.6]{ressources/deroulement.png}
+  \caption{Schéma du déroulement du programme (non formalisé)}
+\end{figure}
+
+La ressource la plus importante est le graphe car il est généré par l'importeur 
+puis utilisé par l'exporteur -- non représenté mais passé à la création -- pour 
+vérifier la compatibilité avec le projet UPPAAL et la conversion dans le bon format.
+\\\\
+Par ailleurs, au niveau de l'implémentation -- avec l'interface graphique -- nous 
+avons découpé cette routine en étapes. Ceci nous a permis de pouvoir reprendre 
+à n'importe quel moment si il y a eu un souci et que l'utilisateur est en moyen de 
+le résoudre via l'interface.
+\\\\
+
+\section{Choix techniques}
+\subsection*{Technologie}
+Nous avons décidé d'utiliser la technologie JAVA pour développer notre 
+solution car il s'agit celle qui a été utilisé par les développeurs du projet UPPAAL.
+\\\\
+Celui-ci n'est pas open source mais s'il le devient ce sera alors plus facile d'intégrer
+notre solution d'import directement en interne.
+
+\subsection*{Aspect mis de coté}
+Afin de nous concentrer sur la conversion du graphe et l'importation dans le projet UPPAAL,
+le logiciel ne prend pas en compte la disposition graphique des éléments de l'automate.
+\\\\
+Il se contente alors de les afficher en ligne afin de pouvoir les identifier facilement mais 
+l'utilisateur devra les réorganiser lui-même sachant que UPPAAL n'intègre pas de fonctions de 
+réorganisation automatique
+
+\section{Documentation du logiciel}
 \subsection{Fenêtre principale}
 
 Il s'agit du premier élément auquel l'utilisateur est confronté mais l'interface a été 
@@ -329,31 +395,5 @@ l'utilisateur quand celui-ci est terminé.
 
 Le message rappelle quel projet UPPAAL a été modifié pendant l'opération mais 
 aussi le nom de l'automate qui a été ajouté.
-
-\subsection{Choix techniques}
-\subsubsection*{Technologie}
-Nous avons décidé d'utiliser la technologie JAVA pour développer notre 
-solution car il s'agit celle qui a été utilisé par les développeurs du projet UPPAAL.
-\\\\
-Celui-ci n'est pas open source mais s'il le devient ce sera alors plus facile d'intégrer
-notre solution d'import directement en interne.
-
-\subsubsection*{Aspect mis de coté}
-Afin de nous concentrer sur la conversion du graphe et l'importation dans le projet UPPAAL,
-le logiciel ne prend pas en compte la disposition graphique des éléments de l'automate.
-\\\\
-Il se contente alors de les afficher en ligne afin de pouvoir les identifier facilement mais 
-l'utilisateur devra les réorganiser lui-même sachant que UPPAAL n'intègre pas de fonctions de 
-réorganisation automatique
-
-\subsubsection*{Extensibilité}
-L'architecture interne du programme a été pensée pour être la plus modulaire possible. 
-Ce qui signifie que l'on peut facilement importer et/ou exporter dans un autre format
-sans changer ce qui existe déjà. En effet, le programme possède une représentation interne
-de l'automate sous forme de graphe ce qui rend ce genres d'ajustements plus simple. 
-\\\\
-Nous avons mis à disposition une interface graphique mais nous l'avons conçue dans l'optique 
-de la découplée le plus possible du moteur de l'application. Il serait alors aisé de la supprimer
-ou de la remplacer puisqu'elle suit le patron de conception MVC. 
 
 \end{document}
