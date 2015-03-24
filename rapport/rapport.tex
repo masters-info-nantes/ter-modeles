@@ -42,6 +42,17 @@
 	\newpage
 	
 	\setlength{\unitlength}{1cm}
+	
+	
+	\chapter{Introduction}
+	Ce présent document fait office de rapport final pour le module d'initiation à la recherche effectué au sein du Master 1 ALMA. Ce module permet d'initier les étudiants au travail de recherche en informatique. Le sujet qui nous à été affectué est le suivant : \begin{center}
+	  Modélisation et analyse des systèmes logiciels hétérogènes
+	\end{center}
+Il s'agit la de modéliser des systèmes hétérogènes à l'aide d'automates, dans le but de les faire communiquer ensembles.
+
+Au cours de ce rapport, différents points seront abordés. Tout d'abord une présentation du laboratoire LINA ainsi que l'équipe AeLoS que nous avons intégré le temps du module de recherche.
+De ce fait, nous en viendrons à expliquer la problématique du projet avec les différentes solutions adaptées à la résolution de ce dernier. Nous expliquerons donc la solution que nous avons choisi de mettre en place. Ensuite nous rentrerons au coeur du projet avec la présentation des différents outils utilisés pour mener à bien ce projet.
+	
 
 \chapter{Présentation du laboratoire}
 Acteur central du développement de l'informatique dans la région des Pays de La Loire, le LINA (Laboratoire d'Informatique de Nantes Atlantique) est un laboratoire de recherche en sciences et technologies du logiciel qui est dirigé par Pierre Cointe. Avec ses 180 membres, ce laboratoire est actuellement situé sur deux sites Nantais : la Lombarderie (Faculté des Sciences et Techniques) et la Chantrerie (Ecole des Mines et Polytech' Nantes).
@@ -75,38 +86,11 @@ Le projet central de cette équipe s'appuie sur les trois thématiques suivantes
 \end{itemize}
 
 \section{Les membres}
-Voici la liste des membres actuels de l'équipe AeLoS : \\
-\begin{itemize}
-  \item Membres permanents :\\
-  \begin{itemize}[label=$\circ$]
-    \item ANDRE Pascal (MC)
-    \item ARDOUREL Gilles (MC)
-    \item ATTIOGBE Christian (P)
-    \item DELAHAYE Benoit (MC)
-    \item JARD Claude (P)
-    \item LANOIX Arnaud (MC)
-    \item MOTTU Jean-Marie (MC)
-    \item OUSSALAH CHABANE Mourad (P)
-    \item TAMZALIT Dalila (MC)
-    \item VAILLY Alain (MC)\\
-  \end{itemize}
-  
-  \item Membres non permanents :\\
-  \begin{itemize}[label=$\circ$]
-    \item AOUADHI Mohamed Amine (D)
-    \item DAVID Nicolas (D)
-    \item GASMALLAH Noureddine (D)
-    \item HASSAN Adel (D)
-    \item PEPIN Jonathan (D)
-    \item PERRIN Matthieu (D)
-    \item SFERRUZZA David (D)\\
-  \end{itemize} 
-\end{itemize}
-
-MC : Maître de conférence, P : Profeseur, D : Doctorant\\
-
-
+Une récente liste des membres est disponible sur le site du LINA, à l'adresse suivante : \\
+\url{http://www.lina.univ-nantes.fr/spip.php?page=membres&id_equipe=15&lang=fr}
 \chapter{Présentation du sujet}
+
+
 \section{Problématique}
 
 \paragraph*{Contexte} : Approches formelles des systèmes embarqués communiquants.\\
@@ -197,7 +181,7 @@ Uppaal se compose de trois parties principales:
 \end{itemize} 
 
 
-  Le langage de description est un langage de commande non-déterministe avec des types de données (par exemple des entiers , des tableaux, etc. ) . Il ce sert de la modélisation ou du langage de conception pour décrire le comportement du système grâce à des réseaux d'automates étendus avec des variables d' horloge et des données .\\ 
+  Le langage de description est un langage de commande non-déterministe avec des types de données (par exemple des entiers , des tableaux, etc. ) . Il se sert de la modélisation ou du langage de conception pour décrire le comportement du système grâce à des réseaux d'automates étendus avec des variables d' horloge et des données .\\ 
 
   Le simulateur est un outil de validation qui permet l'examen de possibles exécutions d'un système au début de la conception( ou la modélisation ) et fournit un moyen peu coûteux de détection de défaut avant la vérification par le vérificateur de modèle qui couvre l'ensemble des comportement dynamique du système.\\
 
