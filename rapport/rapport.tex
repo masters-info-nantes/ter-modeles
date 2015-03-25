@@ -46,15 +46,29 @@
 	\setlength{\unitlength}{1cm}
 	
 	
-	\chapter{Introduction}
-	Ce présent document fait office de rapport final pour le module d'initiation à la recherche effectué au sein du Master 1 ALMA. Ce module permet d'initier les étudiants au travail de recherche en informatique. Le sujet qui nous à été affectué est le suivant : \begin{center}
-	  Modélisation et analyse des systèmes logiciels hétérogènes
-	\end{center}
-Il s'agit la de modéliser des systèmes hétérogènes à l'aide d'automates, dans le but de les faire communiquer ensembles.
+\chapter{Introduction}
+Ce document est un rapport rassemblant le travail effectué dans le cadre du module 
+d'initiation à la recherche au sein du Master 1 ALMA. Ce module permet d'initier 
+les étudiants au travail de recherche en informatique. 
+\\\\
+Le sujet de recherche auquel nous avons contribuer est le suivant : 
 
-Au cours de ce rapport, différents points seront abordés. Tout d'abord une présentation du laboratoire LINA ainsi que l'équipe AeLoS que nous avons intégré le temps du module de recherche.
-De ce fait, nous en viendrons à expliquer la problématique du projet avec les différentes solutions adaptées à la résolution de ce dernier. Nous expliquerons donc la solution que nous avons choisi de mettre en place. Ensuite nous rentrerons au coeur du projet avec la présentation des différents outils utilisés pour mener à bien ce projet.
-	
+\begin{center}
+	  \textbf{Modélisation et analyse des systèmes logiciels hétérogènes}
+\end{center}
+
+La préoccupation de l'équipe est de trouver un moyen d'assurer la cohésion d'un système
+hétérogène lors d'opérations d'ajout et/ou de suppression des modèles le composant. 
+Tout les modèles seront alors capables de communiquer ensembles et dans un premier temps, 
+le choix a été fait de s'appuyer sur l'exemple d'automates que l'on voudrait composer.
+\\\\
+Au cours de ce rapport, différents points seront abordés. Tout d'abord une 
+présentation du laboratoire LINA ainsi que l'équipe AeLoS que nous avons intégré le 
+temps du module de recherche. Nous reviendrons alors plus en détail sur la 
+problématique soulevée par le sujet pour ensuite présenter les 3 solutions proposées
+par l'équipe. Ensuite, nous expliquerons la solution que nous avons choisi de mettre 
+en place et nous rentrerons au cœur du projet avec la présentation de la solution
+que nous avons implémenter.	
 
 \chapter{Présentation du laboratoire}
 Acteur central du développement de l'informatique dans la région des Pays de La Loire, le LINA (Laboratoire d'Informatique de Nantes Atlantique) est un laboratoire de recherche en sciences et technologies du logiciel qui est dirigé par Pierre Cointe. Avec ses 180 membres, ce laboratoire est actuellement situé sur deux sites Nantais : la Lombarderie (Faculté des Sciences et Techniques) et la Chantrerie (Ecole des Mines et Polytech' Nantes).
@@ -95,15 +109,16 @@ Une récente liste des membres est disponible sur le site du LINA, à l'adresse 
 
 \section{Problématique}
 
-\paragraph*{Contexte} : Approches formelles des systèmes embarqués communiquants.\\
+\paragraph*{Contexte}: Approches formelles des systèmes embarqués communiquants.\\
 
-La construction rigoureuse d'un logiciel se fait à partir de son modèle. Pour des logiciels complexes (par exemple ceux
-qui ont de nombreux composants différents -- hétérogènes-- et qui communiquent), on dispose de plusieurs modèles
-(hétérogènes aussi) qui doivent intérargir de façon cohérente, pour garantir l'interopérabilité sémantique entre les
-modèles puis les composants logiciels. Le domaine des systèmes embarqués (et aussi des objets connectés) regorge
-d'exemples.\\
+La construction rigoureuse d'un logiciel se fait à partir de son modèle. Pour des 
+logiciels complexes (par exemple ceux qui ont de nombreux composants différents -- 
+hétérogènes-- et qui communiquent), on dispose de plusieurs modèles (hétérogènes 
+aussi) qui doivent intérargir de façon cohérente, pour garantir l'interopérabilité 
+sémantique entre les modèles puis les composants logiciels. Le domaine des systèmes 
+embarqués (et aussi des objets connectés) regorge d'exemples.\\
 
-\paragraph*{Description du travail} : Etudier l'interopérabilité entre des modèles de composants (logiciels ou non).\\
+\paragraph*{Description du travail}: Etudier l'interopérabilité entre des modèles de composants (logiciels ou non).\\
 En nous appuyant dans un premier temps sur des modèles à base d'automates à états, il s'agit dans le cadre du stage
 d'initiation à la recherche, de contribuer à la conception et au développement d'outils passerelle entre modèles.\\\\
 
