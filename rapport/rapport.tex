@@ -132,7 +132,7 @@ des contrats (de type Assume/Guarantee)
   \item etc
 \end{itemize}
 
-\section{Solutions proposées par l'équipe AeLoS}
+\section{Solutions proposées par l'équipe AeLoS}\label{sec:Solutions}
 Pour répondre à la problématique, l'équipe AeLoS nous a proposé 3 façons de 
 faire tout en nous laissant la liberté d'en proposer d'autres.
 \\\\
@@ -187,28 +187,6 @@ Il est admis que les automates sont des une spécialisation de graphe, ce qui
 signifie que n'importe quel automate peut-être repésenté sous forme de graphe. 
 C'est la raison qui nous a poussé à utiliser le language \emph{DOT} 
 \newpage
-\section{Rappel sur les Automates}
-
-    Les automates sur lesquels nous nous appuierons pour ce projet sont les automates à états fini, non-déterministe contenant des $\epsilon$-transistions.\\
-    
-    Rappelons la définition de l’automate à états fini non déterministe :
-\begin{enumerate}
-    \item un ensemble fini d’états, souvent noté Q 
-    \item un ensemble fini de symboles, appelé alphabet et souvent noté $\Sigma$ 
-    \item une fonction de transition, souvent nommée $\delta$, qui reçoit comme arguments un état de Q et un symbole de $\Sigma$ ou la chaîne vide notée $\epsilon$ et qui rend comme résultat une partie de Q \begin{center}$\delta : Q * ( \Sigma \cup \epsilon ) \rightarrow P(Q)$ \end{center}
-    \item un état initial q0, appartenant à Q
-    \item un sous-ensemble F de Q constitué des états finals, ou états acceptants\\
-\end{enumerate}    
-
-
-    Voici un exemple d'automate, extrait de notre projet :\\
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[scale=0.5]{ressources/img.png}
-	\caption{Automate du jobber}
-\end{figure}
-
 \section{UPPAAL : un outil de modelisation des automates}
 UPPAAL est un environnement intégré d'outils pour la modélisation , la validation et la vérification des systèmes temps réel modélisés comme des réseaux d' automates.
 \\\\
@@ -432,5 +410,28 @@ l'utilisateur quand celui-ci est terminé.
 
 Le message rappelle quel projet UPPAAL a été modifié pendant l'opération mais 
 aussi le nom de l'automate qui a été ajouté.
+
+\section{Bilan}
+\subsection{Résulats}
+Après avoir étudié les 3 solutions proposées par l'équipe AeLoS (section \ref{sec:Solutions}) pour composer des systèmes hétérogènes, 
+nous avons choisi de nous concentrer sur la première qui repose sur le principe d'adaptation.
+\\\\
+En effet, pour faire communiquer 2 automates de nature différente on peux essayer d'en modifier un 
+pour qu'il s'adapte -- dans sa forme -- au second. Nous avons donc implémenté une solution reposant sur 
+le logiciel UPPAAL qui lui propose de composer des automates entre eux.
+\\\\
+Notre solution -- appelée Hetersys -- permet d'importer un automate décrit sous forme de graphe -- au format DOT --
+dans un projet UPPAAL qui contient d'autres automates. L'adaptation de l'automate se fait donc de manière naturelle
+-- par le passage au format graphe -- et ce car n'importe quel type d'automate peux être représenté sous cette forme.
+
+\subsection{Perspectives}
+Si l'on se ressitue au niveau du problème dans sa globalité, notre outil permet de gérer l'ajout de composants logiciels
+dans un système hétérogène mais il n'intègre pas encore toutes les éléments liés à cette opération. 
+\\\\
+Cela s'explique par le fait que la recherche sur le sujet n'est pas finie, elle demande donc plus de travail pour identifier
+les points qui doivent être vérifiés lors de l'ajout -- ou de la suppression -- d'un modèle au sein d'un système hétérogène.
+\\\\
+Notre travail peut tout de même constituer une base pour tester des hypothèses sur le sujet et éventuellement  -- au travers
+d'évolutions -- être un support pour démontrer par des expérimentations les résultats de la recherche.
 
 \end{document}
