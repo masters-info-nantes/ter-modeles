@@ -447,8 +447,74 @@ l'utilisateur quand celui-ci est terminé.
 Le message rappelle quel projet UPPAAL a été modifié pendant l'opération mais 
 aussi le nom de l'automate qui a été ajouté.
 
-\section{Bilan}
-\subsection{Résulats}
+\chapter{Validation}
+
+    Afin d'expliciter les résultats obtenus grace à notre application, nous allons prendre deux cas concrets. Nous verons à travers eux les extensions possibles de notre programme.
+    
+    \section{Cas du travailleur}
+    
+    Notre premier exemple est le cas qui à servis d'exemple précédemment, le cas du travailleur. Le principe est simple un travailleur se sert d'outil (marteau et mallet) pour construire des objets.
+    
+    Pour commencer, nous avons créé le cas le plus simple sous uppaal : un travailleur, travaillant sur un seul objet. Pour travaillé sur cette objet, il peut se servir d'un mallet ou d'un marteau, cependant pour le moment il n'a qu'un marteau à sa disposition.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{ressources/workerBasic.png}
+  \caption{Cas de départ}
+\end{figure}
+
+    Le fonctionnement est simple, le travailleur commence par prendre un objet, puis un outil disponible. Une fois qu'il a fini de travailler, il pose son outil, puis l'objet.\\
+    
+    Pour enrichir notre système, on souhaite ajouter la possibilité au travailleur de prendre l'outil mallet. Pour ce faire on commence par créer un fichier dot, décrivant le fonctionnement du mallet, puis on lance notre application pour l'ajouter au système deja existant.
+    
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{ressources/mallet.png}
+  \caption{L'automate mallet}
+\end{figure}    
+
+    L'ajout du mallet au système, ne nécessite pas la création de nouveau canaux, car il utilise ceux deja existant. Après la simulation de uppaal, on constate que l'automate mallet est parfaitement intégrer, le travailleur prenant àléatoirement le marteau ou le mallet pour travailler.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{ressources/workerMallet.png}
+  \caption{Cas apres le rajout de l'automate mallet}
+\end{figure}  
+
+\newpage    
+    \section{Cas de la camera}
+
+    Pour illustrer le fonctionnement de notre programme, nous avons choisi un second exemple, celui de la camera. Cette exemple est tout aussi simple que le precedent, une camera de surveillance filme une piece et envoi en continue les images à un écran qui les affichent.
+    
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{ressources/cameraBasic.png}
+  \caption{Cas de départ}
+\end{figure}       
+
+    Maintenant, nous souhaitons rajoutez une fonction de sauvegarde à notre système. Avant que les images ne soit affichées sur un écran elle doivent être enregistrer. L'automate representant ce comportement est simple, il recupere la video de la camera, l'enregistre et la renvoi à l'écran.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{ressources/save.png}
+  \caption{L'automate de sauvegarde}
+\end{figure} 
+
+    L'automate est intégrer au système. Cependant le fonctionnement n'est pas celui attendu. En effet, nous souhaitions que systématiquement l'enregistrement passe par la camera, ce qui n'est pas le cas ici. Lors de l'envoi par la camera, la reception sera faite àléatoirement par ceux qui attendent cette enregistrement.\\
+    
+\newpage    
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{ressources/cameraSave.png}
+  \caption{Cas apres l'ajout de la fonction de sauvegarde}
+\end{figure}     
+    
+    Afin d'obtenir le comportement obtenu, il faudrait empecher la communication camera/ecran en par exemple, créant un canal spécifique entre la sauvegarde et l'ecran. De cette manière, la communication se fera toujours comme souhaité.\\
+    
+    Nous avons conscience des limites de notre application, cependant nous nous sommes concentrés sur l'ajout d'un automate à un système existant. La gestion de la cohérence serait logiquement l'étape suivante, mais elle represente un fonctionnalité completement différente de celle que nous apportons.
+
+\chapter{Bilan}
+\section{Résulats}
 Après avoir étudié les 3 solutions proposées par l'équipe AeLoS (section \ref{sec:Solutions}) pour composer des systèmes hétérogènes, 
 nous avons choisi de nous concentrer sur la première qui repose sur le principe d'adaptation.
 \\\\
@@ -460,7 +526,7 @@ Notre solution -- appelée Hetersys -- permet d'importer un automate décrit sou
 dans un projet UPPAAL qui contient d'autres automates. L'adaptation de l'automate se fait donc de manière naturelle
 -- par le passage au format graphe -- et ce car n'importe quel type d'automate peux être représenté sous cette forme.
 
-\subsection{Perspectives}
+\section{Perspectives}
 La solution que nous avons implémentée constitue un noyau d'application -- fonctionnel de bout en bout -- qui a été conçu 
 pour être facilement extensible pour les personnes qui voudrons y ajouter des fonctionnalités. 
 \\\\
