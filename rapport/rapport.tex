@@ -187,6 +187,28 @@ Il est admis que les automates sont des une spécialisation de graphe, ce qui
 signifie que n'importe quel automate peut-être repésenté sous forme de graphe. 
 C'est la raison qui nous a poussé à utiliser le language \emph{DOT} 
 \newpage
++\section{Rappel sur les Automates}
++
++    Les automates sur lesquels nous nous appuierons pour ce projet sont les automates à états fini, non-déterministe contenant des $\epsilon$-transistions.\\
++    
++    Rappelons la définition de l’automate à états fini non déterministe :
++\begin{enumerate}
++    \item un ensemble fini d’états, souvent noté Q 
++    \item un ensemble fini de symboles, appelé alphabet et souvent noté $\Sigma$ 
++    \item une fonction de transition, souvent nommée $\delta$, qui reçoit comme arguments un état de Q et un symbole de $\Sigma$ ou la chaîne vide notée $\epsilon$ et qui rend comme résultat une partie de Q \begin{center}$\delta : Q * ( \Sigma \cup \epsilon ) \rightarrow P(Q)$ \end{center}
++    \item un état initial q0, appartenant à Q
++    \item un sous-ensemble F de Q constitué des états finals, ou états acceptants\\
++\end{enumerate}    
++
++
++    Voici un exemple d'automate, extrait de notre projet :\\
++
++\begin{figure}[h]
++	\centering
++	\includegraphics[scale=0.5]{ressources/img.png}
++	\caption{Automate du jobber}
++\end{figure}
+
 \section{UPPAAL : un outil de modelisation des automates}
 UPPAAL est un environnement intégré d'outils pour la modélisation , la validation et la vérification des systèmes temps réel modélisés comme des réseaux d' automates.
 \\\\
