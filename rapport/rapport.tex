@@ -461,6 +461,14 @@ dans un projet UPPAAL qui contient d'autres automates. L'adaptation de l'automat
 -- par le passage au format graphe -- et ce car n'importe quel type d'automate peux être représenté sous cette forme.
 
 \subsection{Perspectives}
+La solution que nous avons implémentée constitue un noyau d'application -- fonctionnel de bout en bout -- qui a été conçu 
+pour être facilement extensible pour les personnes qui voudrons y ajouter des fonctionnalités. 
+\\\\
+Nous nous sommes concentrés sur
+le langage DOT pour représenter les graphes -- pour accélérer le développement -- mais il serait intéressant de pouvoir définir des types de syntaxes.
+Cela permettrais aux langages dont la syntaxe est proche de ne pas avoir à redéfinir un importeur dont juste les mots (ou les symboles)
+liés au langage seraient changés. 
+\\\\
 Si l'on se ressitue au niveau du problème dans sa globalité, notre outil permet de gérer l'ajout de composants logiciels
 dans un système hétérogène mais il n'intègre pas encore toutes les éléments liés à cette opération. 
 \\\\
