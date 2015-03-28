@@ -1,7 +1,4 @@
  digraph mon_graphe {
-	a -> b -> c[label=value];
-	b -> d;
-	a->d[label="iter?"];
-	e->d;
-	d-> j;
+ 	1 -> 2[label="getMal?"];
+ 	2 -> 1[label="putMal?"];
  }

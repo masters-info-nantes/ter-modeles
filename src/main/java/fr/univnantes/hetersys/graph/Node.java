@@ -77,9 +77,10 @@ public class Node extends Element {
 		Node cur = null, next = null;
 		
 		while(!queue.isEmpty()) {
-			cur = queue.remove();
+			cur = queue.remove();		
 			backList.add(cur);
 			
+			// Entry points have no input arcs
 			if(cur.getInputArcs().isEmpty()){
 				entryPoints.add(cur);
 			}
@@ -95,6 +96,14 @@ public class Node extends Element {
 					queue.add(next);
 				}
 			}
+		}
+		
+		// Assume the root is an entry point
+		// Problem: a -> b, b -> a 
+		// says "a" is not an entry point because is 
+		// got input arcs
+		if(entryPoints.isEmpty()){
+			entryPoints.add(this);
 		}
 		
 		return entryPoints;
