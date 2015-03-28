@@ -200,7 +200,6 @@ C'est la raison qui nous a poussé à utiliser le language \emph{DOT}
     \item un sous-ensemble F de Q constitué des états finals, ou états acceptants\\
 \end{enumerate}    
 
-
     Voici un exemple d'automate, extrait de notre projet :\\
 
 \begin{figure}[h]
@@ -208,6 +207,21 @@ C'est la raison qui nous a poussé à utiliser le language \emph{DOT}
 	\includegraphics[scale=0.5]{ressources/img.png}
 	\caption{Automate du jobber}
 \end{figure}
+  
+    En appliquant la définition donné ci-dessus, on obtient pour notre exemple :
+\begin{enumerate}
+  \item l'ensemble d'états Q = \{1,2,3,4,5\}
+  \item l'alphabet $\Sigma$ = \{getPart!,finishPart!,getMallet!,putMallet!,getHammer!,putHammer!\}
+  \item l'état initial q0 = 1 et il n'y a pas d'état final F = \{\}
+  \item la liste des fonctions de transition : 
+  \begin{enumerate}
+    \item $\delta$(1,getPart!) = 2 
+    \item $\delta$(2,getHammer!) = 3 et $\delta$(2,getMallet!) = 3 
+    \item $\delta$(3,$\epsilon$) = 4 
+    \item $\delta$(4,finishPart!) = 5 
+    \item $\delta$(5,putMallet!) = 1 et $\delta$(5,putHammer!) = 1 
+  \end{enumerate}
+\end{enumerate}
 
 \section{UPPAAL : un outil de modelisation des automates}
 UPPAAL est un environnement intégré d'outils pour la modélisation , la validation et la vérification des systèmes temps réel modélisés comme des réseaux d' automates.
