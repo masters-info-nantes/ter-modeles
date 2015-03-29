@@ -109,6 +109,12 @@ Une récente liste des membres est disponible sur le site du LINA, à l'adresse 
 
 \section{Problématique}
 
+
+%Nombreuses technologies, langages, sytemes
+%Logiciels complexes composés de plusieurs modèles hétérogenes
+%Besoin de communiquer ensemble
+    %Un systeme se définit à partir d'un automate
+
 \paragraph*{Contexte}: Approches formelles des systèmes embarqués communiquants.\\
 
 La construction rigoureuse d'un logiciel se fait à partir de son modèle. Pour des 
@@ -118,23 +124,26 @@ aussi) qui doivent intérargir de façon cohérente, pour garantir l'interopéra
 sémantique entre les modèles puis les composants logiciels. Le domaine des systèmes 
 embarqués (et aussi des objets connectés) regorge d'exemples.\\
 
-\paragraph*{Description du travail}: Etudier l'interopérabilité entre des modèles de composants (logiciels ou non).\\
-En nous appuyant dans un premier temps sur des modèles à base d'automates à états, il s'agit dans le cadre du stage
-d'initiation à la recherche, de contribuer à la conception et au développement d'outils passerelle entre modèles.\\\\
+Prenons un exemple concret : 
+Un système de surveillance film et transmet les images sur un moniteur distant.
+%Integrer image : automate camera + automate moniteur
+On souhaite alors sauvegarder les vidéos de surveillance sur une base de données comme ci-dessous :
+%Integrer image : automate camera + automate moniteur + bdd
+Ainsi, les différents modèles qui composent ce système se doivent de fonctionner correctement malgré l'ajout de composant.\\
 
-Nous travaillons sur plusieurs aspects :\\
-\begin{itemize}
-  \item Lorsque cela est possible, en fonction de la sémantique des modèles, un modèle donné est encodé par un autre
-modèle choisi mais qui est sémantiquement équivalent.
-  \item Lorsque cela est possible, en fonction de la sémantique des modèles, un modèle peut interagir avec un autre avec
-des contrats (de type Assume/Guarantee)
-  \item Plug'N'Check (analyse systématique de modèles/composants)
-  \item etc
+
+
+
+De ce fait, un logiciel comme YMPD permettant la lecture coté serveur de piste audio, est constitué de deux langages que tout opposent : \begin{itemize}
+  \item Le C (de bas niveau)
+  \item Le Javascript (de très haut niveau)
 \end{itemize}
+Cependant, le logiciel doit fonctionner correctement malgré l'utilisation de ces langages différents. Ainsi, l'utilisation de modèle permet de représenter les systèmes et viennent à expliquer le fonctionnement du logiciel dans un langage commun qui n'est autre que le modèle d'automate.
+
 
 \section{Solutions proposées par l'équipe AeLoS}\label{sec:Solutions}
 Pour répondre à la problématique, l'équipe AeLoS nous a proposé 3 façons de 
-faire tout en nous laissant la liberté d'en proposer d'autres.
+faire tout en nous laissant la liberté d'en proposer d'autres.r
 \\\\
 Dans le but de simplifier les exemples, nous avons fait le choix de représenter 
 les modèles comme des formes géométriques que l'on essayerais d'emboiter.
