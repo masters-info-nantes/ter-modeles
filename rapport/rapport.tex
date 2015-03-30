@@ -109,14 +109,6 @@ Une récente liste des membres est disponible sur le site du LINA, à l'adresse 
 
 \section{Problématique}
 
-
-%Nombreuses technologies, langages, sytemes
-%Logiciels complexes composés de plusieurs modèles hétérogenes
-%Besoin de communiquer ensemble
-    %Un systeme se définit à partir d'un automate
-
-\paragraph*{Contexte}: Approches formelles des systèmes embarqués communiquants.\\
-
 La construction rigoureuse d'un logiciel se fait à partir de son modèle. Pour des 
 logiciels complexes (par exemple ceux qui ont de nombreux composants différents -- 
 hétérogènes-- et qui communiquent), on dispose de plusieurs modèles (hétérogènes 
@@ -124,17 +116,27 @@ aussi) qui doivent intérargir de façon cohérente, pour garantir l'interopéra
 sémantique entre les modèles puis les composants logiciels. Le domaine des systèmes 
 embarqués (et aussi des objets connectés) regorge d'exemples.\\
 
-Prenons un exemple concret : 
-Un système de surveillance film et transmet les images sur un moniteur distant.
+\subparagraph*{Prenons un exemple concret :\\ }
+Un système de surveillance film et transmet les images sur un moniteur distant comme ceci : 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.5]{ressources/camera-moniteur.png}
+	\caption{Exemple n1 - Camera Moniteur}
+\end{figure}
 %Integrer image : automate camera + automate moniteur
-On souhaite alors sauvegarder les vidéos de surveillance sur une base de données comme ci-dessous :
-%Integrer image : automate camera + automate moniteur + bdd
-Ainsi, les différents modèles qui composent ce système se doivent de fonctionner correctement malgré l'ajout de composant.\\
+Que se passerait il si l'on souhaite alors sauvegarder les vidéos de surveillance sur une base de données comme ci-dessous?
+Les différents modèles qui composent le systèmes se doivent de fonctionner correctement malgré l'ajout du composant.\\\\
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.5]{ressources/camera-bdd-moniteur.png}
+	\caption{Exemple n2 - Camera BDD  Moniteur}
+\end{figure}
 
 
+\paragraph*{Autre exemple :\\}
 
-
-De ce fait, un logiciel comme YMPD permettant la lecture coté serveur de piste audio, est constitué de deux langages que tout opposent : \begin{itemize}
+Le logiciel comme YMPD permettant la lecture coté serveur de piste audio, est constitué de deux langages que tout opposent : \begin{itemize}
   \item Le C (de bas niveau)
   \item Le Javascript (de très haut niveau)
 \end{itemize}
