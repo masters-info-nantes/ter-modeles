@@ -13,6 +13,7 @@
 \usepackage{amsmath}
 \usepackage{enumitem}
 \usepackage{float} 
+\usepackage{fancyhdr}
 
 \usepackage{pict2e}
 
@@ -30,21 +31,29 @@
 }
 \lstset{style=customstyle}
 
-\title{\textsc{Rapport de projet de recherche}\\Module d'initiation à la recherche}
+\title{\textsc{Rapport de projet de recherche}\\\Large{Module d'initiation à la recherche}}
 \author{Antoine Forgerou \and Jérémy Bardon \and Nicolas Bourdin}
 \date{}
+
+\fancypagestyle{empty}{%
+  \fancyhead[L]{	\includegraphics[scale=0.5]{ressources/logoUniv.jpg}}
+  \fancyhead[R]{Master Informatique\\2014/2015}
+}
 
 % Permet de masquer les affichages de "Chapitre" 
 \titleformat{\chapter}[hang]{\bf\huge}{\thechapter}{2pc}{} 
 \begin{document}
 	\renewcommand{\contentsname}{Sommaire}
+	\pagenumbering{gobble}
+
 	\maketitle	
 
 	\tableofcontents	
 	\newpage
 	
 	\setlength{\unitlength}{1cm}
-	
+	\setcounter{page}{1}
+	\pagenumbering{arabic}
 	
 \chapter{Introduction}
 Ce document est un rapport rassemblant le travail que nous avons effectué dans le cadre du module 
@@ -316,7 +325,7 @@ d'importer directement un automate -- décrit sous forme de graphe -- dans un pr
 
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=0.7]{ressources/ProgramScheme.png}
+  \includegraphics[scale=0.3]{ressources/ProgramScheme.png}
   \caption{Entrées et sorties du programme}
 \end{figure}
 
@@ -336,7 +345,7 @@ et \emph{exporter} constituent donc les points d'extension de notre programme.
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[scale=0.6]{ressources/archi.png}
+  \includegraphics[scale=0.6]{ressources/archi2.png}
   \caption{Composants du logiciel}
 \end{figure}
 
