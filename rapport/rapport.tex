@@ -333,7 +333,51 @@ Pour la description du graphe, nous avons choisi de nous appuyer
 sur le format DOT bien connu qui est selon nous un langage très simple et minimaliste 
 qui permet de construire des graphes très rapidement.
 
-\section{Conception et architecture logicielle}
+\section{Conception}
+
+Comme évoqué dans l'introduction la fonctionnalité attendu de notre module 
+est de pouvoir intégrer un automate dans un système déjà composé de plusieurs
+automates. 
+\\\\
+Dans un premier temps nous avons fait le choix d'utiliser le format DOT pour 
+la description des automates -- sous forme de graphe -- et le logiciel \textsc{Uppaal}
+qui permet de faire de la composition d'automates.
+\\\\
+Afin d'assurer l'extensibilité de notre module, nous n'avons pas tout simplement
+converti le format DOT en format \textsc{Uppaal}. En effet, l'automate en entrée
+est mis sous forme de graphe -- en mémoire -- par un \emph{importeur} qui 
+le donne ensuite à un \emph{exporteur} qui s'occupe de la conversion.
+Ce type de fonctionnement permet facilement d'intervertir les modules
+importeur et exporteur ainsi que d'ajouter facilement de nouveaux formats d'entrée
+et/ou de sortie.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{ressources/archi2.png}
+  \caption{Composants du logiciel}
+\end{figure}
+
+Quelque soit le format utilisé pour définir l'automate en entrée et le système,
+le fonctionnement reste identique car le but est d'ajouter l'automate dans le
+système. 
+
+\begin{equation}
+P_{UPPAAL}' = P_{UPPAAL} + XML(Graph(A))
+\end{equation}
+\\\\
+Ce module constitue un noyau d'application mais pour les besoins de la
+recherche il évoluera pour aussi permettre la suppression d'un automate dans le système.
+\\\\
+Le but du sujet de recherche étant d'assurer la cohésion entre les modèles 
+d'un système hétérogène, le module assure un certain nombre de vérifications
+avant d'effectuer l'action demandée. 
+\\\\
+Afin d'effectuer ces vérifications, ìl
+faut aussi importer les automates du système dans le module et 
+on va alors utiliser un second \emph{importeur} qui connait le format des automates
+dans le système (XML pour \textsc{Uppaal}).
+
+\section{Architecture logicielle}
 
 L'architecture interne du programme a été pensée pour être la plus modulaire possible 
 ce qui signifie que l'on peut facilement importer et/ou exporter dans un autre format
@@ -343,9 +387,9 @@ En effet, le programme possède une représentation interne de l'automate sous f
 de graphe ce qui rend ce genres d'ajustements plus simples. Les parties \emph{importer}
 et \emph{exporter} constituent donc les points d'extension de notre programme.
 
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
-  \includegraphics[scale=0.6]{ressources/archi2.png}
+  \includegraphics[scale=0.6]{ressources/archi.png}
   \caption{Composants du logiciel}
 \end{figure}
 
