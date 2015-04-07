@@ -14,6 +14,7 @@
 \usepackage{enumitem}
 \usepackage{float} 
 \usepackage{fancyhdr}
+\usepackage{multirow}
 
 \usepackage{pict2e}
 
@@ -35,9 +36,11 @@
 \author{Antoine Forgerou \and Jérémy Bardon \and Nicolas Bourdin}
 \date{}
 
-\fancypagestyle{empty}{%
+\fancypagestyle{empty}{
   \fancyhead[L]{	\includegraphics[scale=0.5]{ressources/logoUniv.jpg}}
   \fancyhead[R]{Master Informatique\\2014/2015}
+  \fancyfoot[L]{Responsable : M$^r$ Christian Attiogbé\\Équipe AeLoS}
+  \fancyfoot[R]{Version du \today}
 }
 
 % Permet de masquer les affichages de "Chapitre" 
@@ -48,13 +51,23 @@
 
 	\maketitle	
 
+\chapter*{Remerciements}
+Ce stage au sein de l'équipe de recherche AeLoS nous as donné
+l'opportunité d'avoir un aperçu du monde de la recherche. 
+\\\\
+C'est pourquoi nous tenons à remercier M$^r$ Christian Attiogbé 
+ainsi que l'équipe AeLoS pour nous avoir permis d'apporter notre
+contribution à l'un de leurs sujets de recherche.
+
+\newpage
+
 	\tableofcontents	
 	\newpage
-	
+
 	\setlength{\unitlength}{1cm}
 	\setcounter{page}{1}
 	\pagenumbering{arabic}
-	
+		
 \chapter{Introduction}
 Ce document est un rapport rassemblant le travail que nous avons effectué dans le cadre du module 
 d'initiation à la recherche au sein du Master 1 ALMA. Ce module permet d'initier 
@@ -335,7 +348,7 @@ qui permet de construire des graphes très rapidement.
 
 \section{Conception}
 
-Comme évoqué dans l'introduction la fonctionnalité attendu de notre module 
+Comme évoqué dans l'introduction, la fonctionnalité attendu de notre module 
 est de pouvoir intégrer un automate dans un système déjà composé de plusieurs
 automates. 
 \\\\
@@ -345,11 +358,8 @@ qui permet de faire de la composition d'automates.
 \\\\
 Afin d'assurer l'extensibilité de notre module, nous n'avons pas tout simplement
 converti le format DOT en format \textsc{Uppaal}. En effet, l'automate en entrée
-est mis sous forme de graphe -- en mémoire -- par un \emph{importeur} qui 
-le donne ensuite à un \emph{exporteur} qui s'occupe de la conversion.
-Ce type de fonctionnement permet facilement d'intervertir les modules
-importeur et exporteur ainsi que d'ajouter facilement de nouveaux formats d'entrée
-et/ou de sortie.
+est transposé sous forme de graphe -- en mémoire -- par un \emph{importeur} qui 
+le donne ensuite à un \emph{exporteur} s'occupant de la conversion.
 
 \begin{figure}[H]
   \centering
@@ -357,6 +367,9 @@ et/ou de sortie.
   \caption{Composants du logiciel}
 \end{figure}
 
+Ce type de fonctionnement permet facilement d'intervertir les modules
+importeur et exporteur ainsi que d'ajouter facilement de nouveaux formats d'entrée
+et/ou de sortie.
 Quelque soit le format utilisé pour définir l'automate en entrée et le système,
 le fonctionnement reste identique car le but est d'ajouter l'automate dans le
 système. 
@@ -369,10 +382,10 @@ Ce module constitue un noyau d'application mais pour les besoins de la
 recherche il évoluera pour aussi permettre la suppression d'un automate dans le système.
 \\\\
 Le but du sujet de recherche étant d'assurer la cohésion entre les modèles 
-d'un système hétérogène, le module assure un certain nombre de vérifications
+d'un système hétérogène, le module assure un certain nombre de vérifications (voir \ref{ssec:VerifList})
 avant d'effectuer l'action demandée. 
 \\\\
-Afin d'effectuer ces vérifications, ìl
+Pour des vérifications plus poussées, ìl
 faut aussi importer les automates du système dans le module et 
 on va alors utiliser un second \emph{importeur} qui connait le format des automates
 dans le système (XML pour \textsc{Uppaal}).
@@ -408,7 +421,7 @@ et l'exporteur. Le fonctionnement se résume donc à utiliser ces deux composant
 afin de charger l'automate et de l'ajouter dans le projet UPPAAL tout en procédant
 à certaines vérifications au préalable.
 
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.6]{ressources/deroulement.png}
   \caption{Schéma du déroulement du programme (non formalisé)}
@@ -441,6 +454,27 @@ l'utilisateur devra les réorganiser lui-même sachant que \textsc{Uppaal} n'int
 réorganisation automatique
 
 \section{Documentation du module Hetersys}
+\subsection{Liste des fonctionnalités}
+Afin d'aider à mieux appréhender le module et comprendre ce qu'il est capable ou non de faire voici
+une liste de ces fonctionnalités (datée du \textit{7 avril 2015}).
+
+\subsubsection*{Importation et exportation}
+\begin{itemize}
+	\item Importation d'un automate décrit au format DOT
+	\item Listing des canaux utilisés par l'automate à intégrer	
+	\item Chargement d'un système décrit sous forme de projet \textsc{Uppaal}
+	\item Listing des automates du système
+	\item Listing des canaux déclarés dans le système
+	\item Intégration de l'automate dans le système
+\end{itemize}
+
+\subsubsection*{Vérifications et intégration}\label{ssec:VerifList}
+\begin{itemize}
+	\item Automate en doublon entre celui à ajouter et ceux dans le système (suivant le nom)
+	\item Présence d'au moins un canal utilisé par l'automate (à intégrer) déclaré dans le système
+	\item Ajout des canaux utilisés par le nouvel automate dans le système (au cas par cas)
+\end{itemize}
+
 \subsection{Fenêtre principale}
 
 Il s'agit du premier élément auquel l'utilisateur est confronté mais l'interface a été 
@@ -610,15 +644,20 @@ aussi le nom de l'automate qui a été ajouté.
 \section{Problèmes connus}
 Cette partie expose les soucis que peux engendrer notre solution.
 \\\
+En effet, quand l'on ajoute un nouvel automate dans un projet \textsc{Uppaal} et que l'on 
+veut lancer une simulation ce n'est pas possible.
 
-En effet, quand l'on ajoute un nouvel automate dans un projet \textsc{Uppaal} et que l'on veux lancer une simulation ce n'est pas possible.
-
-Ceci est lié au fait que pour tout automate présent dans le projet, \textsc{Uppaal} oblige à avoir une "instance" dans le système. Cependant, nous considérons que notre logiciel doit seulement se soucier de la cohérence entres les modèles et non de leur utilisation : c'est donc de la responsabilité de l'utilisateur.
+Ceci est lié au fait que pour tout automate présent dans le projet, \textsc{Uppaal} oblige à 
+avoir une "instance" dans le système. Cependant, nous considérons que notre logiciel doit 
+seulement se soucier de la cohérence entre les modèles et non de leur utilisation : c'est 
+donc de la responsabilité de l'utilisateur.
 
 \section{Conclusion}
     Nous avons conscience des limites de notre application, cependant nous nous sommes concentrés sur l'ajout d'un automate à un système existant.
 \\\\
-    La gestion de la cohérence avec le système existant est le coeur du sujet de recherche mais n'en est pour l'instant qu'à ces débuts. Cependant, notre solution intègre déjà les vérifications suivantes :
+    L'intégration (avec compatibilité) dans le système existant est le cœur du sujet de 
+    recherche qui en est pour l'instant à ces débuts. Cependant, notre solution intègre déjà l
+    es vérifications suivantes :
     
     \begin{itemize}
     \item Existence d'un automate du même nom
@@ -626,7 +665,9 @@ Ceci est lié au fait que pour tout automate présent dans le projet, \textsc{Up
     \item Ajout à la demande des nouveaux canaux pendant l'insertion
     \end{itemize}
     
-Pour conclure, le but premier de notre outil -- qui est rempli --  est d'insérer un automate dans un projet \textsc{Uppaal} mais dans le futur ce sera la partie \emph{gestion de la cohérence} qui sera prédominante car il s'agit du sujet de recherche.
+Pour conclure, le but premier de notre outil -- qui est rempli --  est d'insérer un automate 
+dans un projet \textsc{Uppaal} mais dans le futur ce sera la partie 
+\emph{gestion de la cohérence} qui sera prédominante car il s'agit du sujet de recherche.
 
 
 \chapter{Bilan}
