@@ -72,7 +72,7 @@ contribution à l'un de leurs sujets de recherche.
 Ce document est un rapport rassemblant le travail que nous avons effectué dans le cadre du module 
 d'initiation à la recherche au sein du Master 1 ALMA. Ce module permet d'initier 
 les étudiants au travail de recherche en informatique, en immersion dans une équipe
-du laboratoire du LINA. 
+du laboratoire LINA. 
 \\\\
 Le sujet de recherche auquel nous avons contribué est le suivant : 
 
@@ -83,7 +83,7 @@ Le sujet de recherche auquel nous avons contribué est le suivant :
 La préoccupation de l'équipe qui nous a accueilli est de trouver un moyen d'assurer la cohésion 
 de modèles d'un système
 hétérogène lors d'opérations d'ajout et/ou de suppression des modèles le composant. 
-Tout les modèles seront alors capables de communiquer ensembles; et dans un premier temps, 
+Tous les modèles seront alors capables de communiquer ensemble; et dans un premier temps, 
 le choix a été fait de s'appuyer sur l'exemple d'automates que l'on voudrait composer.
 \\\\
 Au cours de ce rapport, différents points seront abordés. Tout d'abord une 
@@ -114,8 +114,7 @@ Le LINA est composé des équipes suivantes :
 
 \chapter{L'équipe AeLoS}	
 
-L'équipe Architectures et Logiciels Sûrs (AeLoS), dirigé par Christian ATTIOGBE, est une équipe 
-de recherche.
+L'équipe Architectures et Logiciels Sûrs (AeLoS), est dirigée par Christian ATTIOGBE.
 
 Le projet central de cette équipe s'appuie sur les trois thématiques suivantes :
 \begin{itemize}[label=$\circ$]
@@ -148,7 +147,7 @@ un système de surveillance filme et transmet des images sur un moniteur distant
 \end{figure}
 %Integrer image : automate camera + automate moniteur
 Que se passerait il si l'on souhaite alors sauvegarder les vidéos de surveillance sur une base de données comme ci-dessous?
-Notre rôle est de faire en sorte que les différents modèles qui composent le systèmes se doivent de fonctionner correctement malgré l'ajout de nouveaux composants. \\\\
+Notre rôle est de faire en sorte que les différents modèles qui composent le système fonctionnent correctement malgré l'ajout de nouveaux composants. \\\\
 \begin{figure}[!h]
 	\centering
 	\includegraphics[scale=0.5]{ressources/camera-bdd-moniteur.png}
@@ -158,7 +157,7 @@ Notre rôle est de faire en sorte que les différents modèles qui composent le 
 
 \paragraph*{Autre exemple :\\}
 
-Le logiciel comme YMPD\footnote{\href{http://www.ympd.org}{ympd.org}} permettant la lecture côté serveur de piste audio, est constitué de deux langages que tout opposent : \begin{itemize}
+Un logiciel comme YMPD\footnote{\href{http://www.ympd.org}{ympd.org}} permettant la lecture côté serveur de piste audio, est constitué de deux langages que tout oppose : \begin{itemize}
   \item Le langage C (de bas niveau)
   \item Le langage Javascript (de très haut niveau)
 \end{itemize}
@@ -389,7 +388,7 @@ Notre but est de pouvoir composer n'importe quel type d'automate en utilisant
 mais il faut obligatoirement dessiner ces automates avec les outils mis à disposition
 par \textsc{Uppaal}.
 \\\\
-Etant donné que les automates sont un sous-ensemble des graphes, ce module propose 
+Etant donné que les automates sont un sous-ensemble des graphes, notre module propose 
 d'importer directement un automate -- décrit sous forme de graphe -- dans un projet 
 \textsc{Uppaal} pré-existant. 
 
@@ -405,7 +404,7 @@ qui permet de construire des graphes très rapidement.
 
 \section{Conception}
 
-Comme évoqué dans l'introduction, la fonctionnalité attendu de notre module 
+Comme évoqué dans l'introduction, la fonctionnalité attendue de notre module 
 est de pouvoir intégrer un automate dans un système déjà composé de plusieurs
 automates. 
 \\\\
@@ -699,7 +698,7 @@ aussi le nom de l'automate qui a été ajouté.
 
 \newpage
 \section{Problèmes connus}
-Cette partie expose les soucis que peux engendrer notre solution.
+Cette partie expose les soucis que peut engendrer notre solution.
 \\\
 En effet, quand l'on ajoute un nouvel automate dans un projet \textsc{Uppaal} et que l'on 
 veut lancer une simulation ce n'est pas possible.
@@ -713,13 +712,12 @@ donc de la responsabilité de l'utilisateur.
     Nous avons conscience des limites de notre application, cependant nous nous sommes concentrés sur l'ajout d'un automate à un système existant.
 \\\\
     L'intégration (avec compatibilité) dans le système existant est le cœur du sujet de 
-    recherche qui en est pour l'instant à ces débuts. Cependant, notre solution intègre déjà l
-    es vérifications suivantes :
+    recherche qui en est pour l'instant à ces débuts. Cependant, notre solution intègre déjà les vérifications suivantes :
     
     \begin{itemize}
-    \item Existence d'un automate du même nom
-    \item Indication des canaux communs entre l'automate à insérer et le projet \textsc{Uppaal}
-    \item Ajout à la demande des nouveaux canaux pendant l'insertion
+    \item Existence d'un automate du même nom,
+    \item Indication des canaux communs entre l'automate à insérer et le projet \textsc{Uppaal},
+    \item Ajout à la demande des nouveaux canaux pendant l'insertion.
     \end{itemize}
     
 Pour conclure, le but premier de notre outil -- qui est rempli --  est d'insérer un automate 
@@ -738,7 +736,7 @@ le logiciel \textsc{Uppaal} qui lui propose de composer des automates entre eux.
 \\\\
 Notre solution -- appelée Hetersys -- permet d'importer un automate décrit sous forme de graphe -- au format DOT --
 dans un projet \textsc{Uppaal} qui contient d'autres automates. L'adaptation de l'automate se fait donc de manière naturelle
--- par le passage au format graphe -- et ce car n'importe quel type d'automate peux être représenté sous cette forme.
+-- par le passage au format graphe -- et ce car n'importe quel type d'automate peut être représenté sous cette forme.
 
 \section{Perspectives}
 La solution que nous avons implémentée constitue un noyau d'application -- fonctionnel de bout en bout -- qui a été conçu 
@@ -750,7 +748,7 @@ Cela permettrait aux langages dont la syntaxe est proche de ne pas avoir à red�
 liés au langage seraient changés. 
 \\\\
 Si l'on se ressitue au niveau du problème dans sa globalité, notre outil permet de gérer l'ajout de composants logiciels
-dans un système hétérogène mais il n'intègre pas encore toutes les éléments liés à cette opération. 
+dans un système hétérogène mais il n'intègre pas encore tous les éléments liés à cette opération. 
 \\\\
 Cela s'explique par le fait que la recherche sur le sujet n'est pas finie, elle demande donc plus de travail pour identifier
 les points qui doivent être vérifiés lors de l'ajout -- ou de la suppression -- d'un modèle au sein d'un système hétérogène.
@@ -762,4 +760,3 @@ d'évolutions -- être un support pour démontrer par des expérimentations les 
 \bibliography{biblio}
 
 \end{document}
-
